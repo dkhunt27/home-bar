@@ -84,6 +84,12 @@
   color: var(--muted);
 }
 
+/* ui.pillOutline on a Link: a link doesn't center its text the way a button does. */
+.pillLink {
+  display: grid;
+  place-items: center;
+}
+
 /* After the base rules above, so it wins over their muted color. */
 .low {
   color: var(--low);

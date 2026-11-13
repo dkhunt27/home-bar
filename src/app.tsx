@@ -20,6 +20,7 @@ const ActivityPage = lazy(() => import("./pages/activity-page"));
 const AddCapsulePage = lazy(() => import("./pages/add-capsule-page"));
 const CapsulePage = lazy(() => import("./pages/capsule-page"));
 const CheersPage = lazy(() => import("./pages/cheers-page"));
+const ExpiringPage = lazy(() => import("./pages/expiring-page"));
 const GuestLinkPage = lazy(() => import("./pages/guest-link-page"));
 const ManagePage = lazy(() => import("./pages/manage-page"));
 
@@ -74,6 +75,14 @@ const router = createBrowserRouter(
           element={
             <RouteGuardOwner>
               <GuestLinkPage />
+            </RouteGuardOwner>
+          }
+        />
+        <Route
+          path={ROUTES.MANAGE_EXPIRING}
+          element={
+            <RouteGuardOwner>
+              <ExpiringPage />
             </RouteGuardOwner>
           }
         />

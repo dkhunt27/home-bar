@@ -1,10 +1,13 @@
 // @vitest-environment node
 import { describe, expect, it } from "vitest";
-import type { CapsuleDbType, SpiritType, StockDbType } from "../types";
+import type { CapsuleDbType, CollectionDbType, SpiritType, StockDbType } from "../types";
 import {
   buildShelf,
   catalogRows,
   catalogTabs,
+  collectionContents,
+  collectionRows,
+  collectionView,
   filterBySpirit,
   filterTitle,
   gridCaption,
@@ -25,7 +28,7 @@ import {
   visibleShelf,
 } from "./bar";
 
-function capsule(id: string, name: string, spirit: SpiritType): CapsuleDbType {
+function capsule(id: string, name: string, spirit: SpiritType, soldSingle = true): CapsuleDbType {
   return {
     id,
     name,
@@ -34,8 +37,21 @@ function capsule(id: string, name: string, spirit: SpiritType): CapsuleDbType {
     img_pour: `https://cdn.example/${id}-pour.png?v=1`,
     description: null,
     sort_order: 0,
+    sold_single: soldSingle,
     created_at: null,
     updated_at: null,
+  };
+}
+
+function collection(id: string, name: string, items: Record<string, number>): CollectionDbType {
+  return {
+    id,
+    name,
+    img: `https://cdn.example/${id}.png?v=1`,
+    sort_order: 0,
+    created_at: null,
+    updated_at: null,
+    collection_items: Object.entries(items).map(([capsule_id, qty]) => ({ capsule_id, qty })),
   };
 }
 
@@ -195,6 +211,91 @@ describe("catalog (Add a capsule)", () => {
 
   it("offers a tab for each spirit in the catalog, in tab order", () => {
     expect(catalogTabs(CATALOG)).toEqual(["all", "vodka", "tequila", "whiskey", "rum", "gin"]);
+  });
+
+  it("leaves out cocktails that only come in a collection", () => {
+    const withExclusive = [...CATALOG, capsule("frosty-navel", "Frosty Navel", "vodka", false)];
+    expect(catalogNames(catalogRows(withExclusive, "vodka", ""))).toEqual(["Lemon Drop"]);
+  });
+});
+
+describe("collections (Add a capsule)", () => {
+  const CAPSULES = [
+    ...CATALOG,
+    capsule("frosty-navel", "Frosty Navel", "vodka", false),
+    capsule("peary-christmas", "Peary Christmas", "tequila", false),
+    capsule("berry-and-bright", "Berry & Bright", "tequila", false),
+  ];
+  const FESTIVE = collection("festive", "Festive Collection", {
+    "peary-christmas": 2,
+    "frosty-navel": 2,
+    "berry-and-bright": 2,
+    "lemon-drop": 2,
+  });
+  const CLASSIC = collection("classic", "Classic Collection Favorites", {
+    "old-fashioned": 1,
+    margarita: 1,
+  });
+  const RUM = collection("rum-lovers", "Rum Lovers Variety Pack", { "rum-breeze": 8 });
+  const ALL = [RUM, FESTIVE, CLASSIC];
+  const packNames = (rows: { collection: CollectionDbType }[]) =>
+    rows.map((r) => r.collection.name);
+
+  it("looks up the cocktails A–Z and sizes the box", () => {
+    const view = collectionView(FESTIVE, new Map(CAPSULES.map((c) => [c.id, c])));
+    expect(view.items.map((i) => i.capsule.name)).toEqual([
+      "Berry & Bright",
+      "Frosty Navel",
+      "Lemon Drop",
+      "Peary Christmas",
+    ]);
+    expect(view.size).toBe(8);
+  });
+
+  it("skips a cocktail missing from the catalog", () => {
+    const view = collectionView(collection("x", "X", { nope: 2, margarita: 2 }), new Map());
+    expect(view.items).toEqual([]);
+    expect(view.size).toBe(0);
+  });
+
+  it("lists packs A–Z", () => {
+    expect(packNames(collectionRows(ALL, CAPSULES, "all", ""))).toEqual([
+      "Classic Collection Favorites",
+      "Festive Collection",
+      "Rum Lovers Variety Pack",
+    ]);
+  });
+
+  it("shows a pack under every spirit it has a cocktail of", () => {
+    expect(packNames(collectionRows(ALL, CAPSULES, "tequila", ""))).toEqual([
+      "Classic Collection Favorites",
+      "Festive Collection",
+    ]);
+    expect(packNames(collectionRows(ALL, CAPSULES, "rum", ""))).toEqual([
+      "Rum Lovers Variety Pack",
+    ]);
+  });
+
+  it("searches the pack's name and the cocktails in it", () => {
+    expect(packNames(collectionRows(ALL, CAPSULES, "all", " FROSTY "))).toEqual([
+      "Festive Collection",
+    ]);
+    expect(packNames(collectionRows(ALL, CAPSULES, "all", "variety"))).toEqual([
+      "Rum Lovers Variety Pack",
+    ]);
+    expect(collectionRows(ALL, CAPSULES, "rum", "frosty")).toEqual([]);
+  });
+
+  it("says what's in the box", () => {
+    const byId = new Map(CAPSULES.map((c) => [c.id, c]));
+    expect(collectionContents(collectionView(FESTIVE, byId).items)).toBe(
+      "2 each of Berry & Bright, Frosty Navel, Lemon Drop and Peary Christmas",
+    );
+    expect(collectionContents(collectionView(RUM, byId).items)).toBe("8 Rum Breeze");
+    const uneven = collection("u", "U", { margarita: 2, manhattan: 1 });
+    expect(collectionContents(collectionView(uneven, byId).items)).toBe(
+      "1 Manhattan and 2 Margarita",
+    );
   });
 });
 

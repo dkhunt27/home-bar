@@ -11,6 +11,7 @@
     "deploy:manual:web": "npm run build:prod && wrangler deploy",
     "dev": "vite",
     "gen:catalog": "node tools/gen-catalog-migration.mjs",
+    "gen:collections": "node tools/gen-collections-migration.mjs",
     "gen:pwa-icons": "node tools/gen-pwa-icons.mjs",
     "gen:types": "supabase gen types typescript > src/types/database.gen.ts",
     "gen:worker-types": "wrangler types",

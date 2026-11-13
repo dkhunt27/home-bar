@@ -66,3 +66,11 @@ INSERT INTO activity (capsule_id, actor_name, kind, amount, created_at) VALUES
   ('espresso-martini-capsules', 'Priya', 'take', 1, now() - interval '28 hours'),
   ('manhattan-cocktails', 'Priya', 'take', 1, now() - interval '29 hours'),
   ('caramel-appletini', 'Sam', 'add', 8, now() - interval '74 hours');
+
+-- Best-by dates (owner only, so the screenshots don't change). The stock rows above went in as
+-- one undated box each (019_boxes.sql); date a few so the Expiring screen has every group.
+UPDATE boxes SET expires_on = current_date - 4 WHERE capsule_id = 'manhattan-cocktails';
+UPDATE boxes SET expires_on = current_date + 9 WHERE capsule_id = 'espresso-martini-capsules';
+UPDATE boxes SET expires_on = current_date + 23 WHERE capsule_id = 'old-fashioned-cocktails';
+UPDATE boxes SET expires_on = current_date + 150
+WHERE capsule_id IN ('margarita-cocktails', 'caramel-appletini');

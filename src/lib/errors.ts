@@ -1,6 +1,6 @@
 // The stock functions RAISE short codes ('out_of_stock', 'undo_expired', ...; see
-// supabase/migrations/010_take_capsule.sql and 011_owner_stock.sql). This turns them into the
-// sentence a person should see.
+// supabase/migrations/010_take_capsule.sql, 011_owner_stock.sql and 019_boxes.sql). This
+// turns them into the sentence a person should see.
 
 const MESSAGES: Record<string, string> = {
   out_of_stock: "Someone just took the last one.",
@@ -9,6 +9,8 @@ const MESSAGES: Record<string, string> = {
   not_in_bar: "That capsule isn't on the shelf yet.",
   undo_expired: "Too late to undo. It's been more than 5 minutes.",
   undo_not_allowed: "That pour can't be undone.",
+  unknown_collection: "That collection isn't in the catalog anymore.",
+  box_gone: "That box is empty now.",
 };
 
 export function friendlyError(err: unknown): string {

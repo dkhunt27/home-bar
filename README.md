@@ -3,7 +3,8 @@
 A mobile-first web app for tracking a Bartesian capsule cabinet. Guests scan the bar's QR
 code (or open the guest link), type their name, browse what's in stock, and tap **Take one**,
 which takes one off the count. The owner signs in by magic link and can restock, fix counts, add capsules from
-the Bartesian catalog, set the low-stock threshold, and get an email when something runs low.
+the Bartesian catalog (single boxes or variety packs), record each box's best-by date and see
+what expires soonest, set the low-stock threshold, and get an email when something runs low.
 Every pour and restock lands in a shared activity log, and counts update live on every phone.
 
 The design is direction 1a ("Speakeasy") from the handoff in [`design/`](design/README.md).
@@ -34,13 +35,14 @@ and a short activity log. `npm run reset:local` puts it back, and regenerates th
 | Command                    | What it does                                                          |
 | -------------------------- | --------------------------------------------------------------------- |
 | `npm run dev`              | Vite + the Worker (`/api/*`) via the Cloudflare plugin                |
-| `npm test`                 | Vitest unit tests (shelf rules, activity formatting)                  |
+| `npm test`                 | Vitest unit tests (shelf rules, activity formatting, best-by dates)   |
 | `npm run lint`             | `tsc -b` + Biome                                                      |
 | `npm run lint:fix`         | Biome safe fixes and formatting                                       |
 | `npm run reset:local`      | Reset the local DB, reseed, regenerate `src/types/database.gen.ts`    |
 | `npm run gen:types`        | Regenerate DB types after a migration                                 |
 | `npm run gen:worker-types` | Regenerate `worker-configuration.d.ts` after editing `wrangler.jsonc` |
 | `npm run gen:catalog`      | Regenerate the capsule-catalog migration from `design/capsules.json`  |
+| `npm run gen:collections`  | Regenerate the collections migration from `supabase/catalog/`         |
 | `npm run gen:pwa-icons`    | Regenerate the home-screen icons and favicon                          |
 | `npm run build:prod`       | Production build against the Supabase project in `wrangler.jsonc`     |
 | `npm run push:prod`        | ⚠️ Apply migrations to the linked remote Supabase project             |
@@ -59,6 +61,14 @@ and a short activity log. `npm run reset:local` puts it back, and regenerates th
   together. `take_capsule` only decrements when there's one left, so two guests tapping the
   last Margarita can't both get it. `undo_take` works on your own pour, within 5 minutes.
   Guests can't write to any table directly.
+- **Collections** (Festive, Lemon Drop, Rum Lovers...) aren't shelf items themselves:
+  `add_collection_box` puts each cocktail in the pack on the shelf (2 each of 4, mostly), so
+  guests still pick the flavor. Cocktails that only come in a pack are capsules with
+  `sold_single = false`. The packs and their contents are hand-curated in
+  `supabase/catalog/collections.json`, since Bartesian only lists them in prose.
+- **Best-by dates** are owner-only. Each box added gets a row in `boxes` with its date, and a
+  trigger on `stock` keeps the boxes adding up to the shelf count on every pour, undo or fix,
+  assuming the soonest date gets poured first. Manage → Expiring lists them soonest first.
 - **Low-stock email:** a pour that leaves a capsule low (or empty) queues an alert. The app
   then pings the Worker (`POST /api/low-stock/notify`), which emails the owner through Maileroo.
   A 30-minute cron retries anything missed, sends the new-guest emails, deletes anonymous

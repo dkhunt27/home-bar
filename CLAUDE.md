@@ -54,10 +54,13 @@ each component/page) plus shared atoms in `src/components/ui.module.css`.
 - **Data layer**: components call `src/lib/db/*-db.ts`, wrapped in TanStack Query with keys
   from `QK` (`src/lib/query-keys.ts`). Shared queries and mutations are in
   `src/hooks/use-bar-data.ts` and `use-bar-mutations.ts`. Pure rules (sort, visibility, tabs,
-  copy) live in `src/lib/bar.ts` and `activity-format.ts`, which are unit-tested. Put new rules
-  there, not in components.
+  copy) live in `src/lib/bar.ts`, `activity-format.ts` and `expiry.ts` (best-by dates), which
+  are unit-tested. Put new rules there, not in components.
+- **Sheets**: `BottomSheet` is the modal frame (Take one, Add a box, Best-by date); every
+  "+8 box" opens `AddBoxSheet`, which asks for the best-by date.
 - **Realtime** (`use-bar-realtime.ts`): stock/activity/settings changes invalidate queries, but
-  not while a mutation is in flight (it would overwrite optimistic counts).
+  not while a mutation is in flight (it would overwrite optimistic counts). `boxes` isn't
+  published; it's refetched on stock changes, since it moves with every count.
 - **Worker** (`worker/`): `POST /api/low-stock/notify` plus a 30-min cron, both running
   `flushLowStockAlerts`. The cron also emails new guests' names (`flushGuestJoinAlerts`) and
   runs `delete_stale_anonymous_users()`. Shared email code is in `worker/mail.ts`. Worker
@@ -66,9 +69,13 @@ each component/page) plus shared atoms in `src/components/ui.module.css`.
 ## Database rules (`supabase/migrations/`)
 
 - Data API access is **read-only** except `settings` (owner UPDATE via RLS). Every stock change
-  is a SECURITY DEFINER function (`take_capsule`, `undo_take`, `add_box`, `adjust_stock`) that
-  checks the role itself and writes the count and the `activity` row together. Keep it that
-  way: no write policies on `stock`/`activity`.
+  is a SECURITY DEFINER function (`take_capsule`, `undo_take`, `add_box`,
+  `add_collection_box`, `adjust_stock`) that checks the role itself and writes the count and
+  the `activity` row together. Keep it that way: no write policies on `stock`/`activity`.
+- **Best-by dates** (`019_boxes.sql`): `boxes` is owner-read-only. The `sync_boxes` trigger on
+  `stock` moves the boxes by however much any count changes (soonest best-by poured first),
+  so the stock functions don't know about dates. Code that adds stock inserts its box row
+  _before_ raising the count (see `shelve_box`), or the trigger files it as undated.
 - Those functions RAISE short codes (`out_of_stock`, `not_owner`, `undo_expired`...) that
   `src/lib/errors.ts` maps to copy. Add new codes in both places.
 - `join_bar` returns a status string (`bad_key`, `no_name`...) instead of raising; the sign-in
@@ -80,7 +87,9 @@ each component/page) plus shared atoms in `src/components/ui.module.css`.
   granted them, and local now matches). A migration that creates a table must GRANT what each
   role needs, including `service_role`, or it fails with "permission denied".
 - The catalog (`007_capsules_catalog.sql`) is generated: `npm run gen:catalog`. To refresh it
-  later, write a new migration with the script; don't edit the applied one.
+  later, write a new migration with the script; don't edit the applied one. Collections
+  (`018_collections_catalog.sql`) work the same way from `supabase/catalog/collections.json`
+  (`npm run gen:collections`); a cocktail that only comes in a pack has `sold_single = false`.
 - `seed.sql` is local only (owner `owner@homebar.dev`, guest link
   `http://localhost:5174/sign-in#k=local-guest-key`).
 

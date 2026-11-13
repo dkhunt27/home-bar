@@ -113,3 +113,47 @@
     animation: none;
   }
 }
+
+/* The best-by date field (Add a box, Best-by date). */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.fieldLabel {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.clear {
+  min-height: 32px;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--amber);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* iOS centers a date's value and sizes the control to it; this keeps it a plain field. */
+.dateInput {
+  display: block;
+  appearance: none;
+  text-align: left;
+}
+
+.dateInput::-webkit-date-and-time-value {
+  text-align: left;
+}
+
+.hint {
+  font-size: 13px;
+  color: var(--muted);
+}

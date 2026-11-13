@@ -17,6 +17,13 @@ export type CapsuleDbType = Omit<Tables["capsules"]["Row"], "spirit"> & { spirit
 export type StockDbType = Tables["stock"]["Row"];
 export type SettingsDbType = Tables["settings"]["Row"];
 export type ActivityDbType = Omit<Tables["activity"]["Row"], "kind"> & { kind: ActivityKindType };
+/** Owner only: one box on the shelf, its best-by date and how many are left in it. */
+export type BoxDbType = Tables["boxes"]["Row"];
+export type CollectionItemDbType = Pick<Tables["collection_items"]["Row"], "capsule_id" | "qty">;
+/** A variety pack with what's in it (collections + collection_items, one query). */
+export type CollectionDbType = Tables["collections"]["Row"] & {
+  collection_items: CollectionItemDbType[];
+};
 
 /** Who's signed in, as far as the bar is concerned (get_me()). */
 export interface MeType {

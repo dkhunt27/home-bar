@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { AddBoxSheet } from "../components/add-box-sheet";
 import { BackButton } from "../components/back-button";
 import { CapsuleTile } from "../components/capsule-tile";
 import { LoadError } from "../components/load-error";
@@ -10,11 +11,11 @@ import { TakeSheet } from "../components/take-sheet";
 import ui from "../components/ui.module.css";
 import { useAuth } from "../hooks/use-auth";
 import { useShelfItem } from "../hooks/use-bar-data";
-import { useAddBox, useAdjustStock } from "../hooks/use-bar-mutations";
+import { useAdjustStock } from "../hooks/use-bar-mutations";
 import { BOX_SIZE, SPIRIT_LABELS, statusLong } from "../lib/bar";
 import { cx } from "../lib/cx";
 import { IMAGE_WIDTH, sizedImage } from "../lib/images";
-import { type CheersState, ROUTES } from "../routes";
+import { type CheersState, collectionsForRoute, ROUTES } from "../routes";
 import type { TakeCapsuleResultType } from "../types";
 import styles from "./capsule-page.module.css";
 
@@ -26,8 +27,8 @@ export default function CapsulePage() {
   const { found, settings, isPending, error } = useShelfItem(capsuleId);
   const [photo, setPhoto] = useState<Photo>("box");
   const [taking, setTaking] = useState(false);
+  const [adding, setAdding] = useState(false);
   const adjust = useAdjustStock();
-  const addBox = useAddBox();
   const navigate = useNavigate();
 
   if (error) return <LoadError error={error} />;
@@ -93,13 +94,16 @@ export default function CapsulePage() {
               >
                 <span className={styles.shelfQty}>{qty}</span>
               </Stepper>
-              <button
-                type="button"
-                className={styles.boxButton}
-                onClick={() => addBox.mutate(capsule.id)}
-              >
-                +{BOX_SIZE} box
-              </button>
+              {capsule.sold_single ? (
+                <button type="button" className={styles.boxButton} onClick={() => setAdding(true)}>
+                  +{BOX_SIZE} box
+                </button>
+              ) : (
+                // No box of 8 of this one: it comes in a collection.
+                <Link to={collectionsForRoute(capsule.name)} className={styles.boxButton}>
+                  Collections
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -120,6 +124,9 @@ export default function CapsulePage() {
       </footer>
 
       {taking && <TakeSheet item={item} onClose={() => setTaking(false)} onTaken={onTaken} />}
+      {adding && (
+        <AddBoxSheet target={{ kind: "capsule", capsule, qty }} onClose={() => setAdding(false)} />
+      )}
     </>
   );
 }

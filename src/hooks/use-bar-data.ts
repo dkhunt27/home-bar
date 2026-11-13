@@ -2,7 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { buildShelf, type ShelfItem, stockStatus } from "../lib/bar";
 import { getRecentActivity } from "../lib/db/activity-db";
-import { getCapsules } from "../lib/db/capsules-db";
+import { getBoxes } from "../lib/db/boxes-db";
+import { getCapsules, getCollections } from "../lib/db/capsules-db";
 import { getJoinKey, getSettings } from "../lib/db/settings-db";
 import { getStock } from "../lib/db/stock-db";
 import { QK } from "../lib/query-keys";
@@ -18,8 +19,22 @@ export function useCapsules() {
   });
 }
 
+/** Like the catalog: only a migration changes it. */
+export function useCollections() {
+  return useQuery({
+    queryKey: QK.collections(),
+    queryFn: getCollections,
+    staleTime: Number.POSITIVE_INFINITY,
+  });
+}
+
 export function useStock() {
   return useQuery({ queryKey: QK.stock(), queryFn: getStock });
+}
+
+/** Owner only: RLS hands anyone else an empty list. */
+export function useBoxes() {
+  return useQuery({ queryKey: QK.boxes(), queryFn: getBoxes });
 }
 
 export function useSettings() {

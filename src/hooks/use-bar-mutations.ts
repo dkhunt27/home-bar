@@ -1,10 +1,11 @@
 import { type QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BOX_SIZE } from "../lib/bar";
+import { setBoxExpiry } from "../lib/db/boxes-db";
 import { rotateJoinKey, updateLowThreshold } from "../lib/db/settings-db";
-import { addBox, adjustStock, takeCapsule, undoTake } from "../lib/db/stock-db";
+import { addBox, addCollectionBox, adjustStock, takeCapsule, undoTake } from "../lib/db/stock-db";
 import { notifyLowStock } from "../lib/low-stock-api";
 import { MK, QK } from "../lib/query-keys";
-import type { SettingsDbType, StockDbType } from "../types";
+import type { BoxDbType, CollectionDbType, SettingsDbType, StockDbType } from "../types";
 
 /** Rewrites one capsule's cached count, adding the stock row if it's new to the bar. */
 function patchStockQty(
@@ -25,8 +26,10 @@ function patchStockQty(
   });
 }
 
+/** Every count change moves the best-by boxes too (sync_boxes in 019_boxes.sql). */
 function refreshStockAndActivity(queryClient: QueryClient) {
   void queryClient.invalidateQueries({ queryKey: QK.stock() });
+  void queryClient.invalidateQueries({ queryKey: QK.boxes() });
   void queryClient.invalidateQueries({ queryKey: QK.activity() });
 }
 
@@ -52,21 +55,72 @@ export function useUndoTake() {
   });
 }
 
-/** Owner: +8. Optimistic, so the Add list and Manage rows update on tap. */
+/** Applies a box's counts to the cache now, and hands back a way to undo that on error. */
+async function patchForBox(queryClient: QueryClient, amounts: [capsuleId: string, n: number][]) {
+  await queryClient.cancelQueries({ queryKey: QK.stock() });
+  const previous = queryClient.getQueryData<StockDbType[]>(QK.stock());
+  for (const [capsuleId, n] of amounts) {
+    patchStockQty(queryClient, capsuleId, (qty) => (qty ?? 0) + n);
+  }
+  return { previous };
+}
+
+/** Owner: +8, with the box's best-by date (or null). Optimistic, so the Add list and Manage
+ * rows update as the sheet closes. */
 export function useAddBox() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (capsuleId: string) => addBox(capsuleId),
-    onMutate: async (capsuleId) => {
-      await queryClient.cancelQueries({ queryKey: QK.stock() });
-      const previous = queryClient.getQueryData<StockDbType[]>(QK.stock());
-      patchStockQty(queryClient, capsuleId, (qty) => (qty ?? 0) + BOX_SIZE);
-      return { previous };
-    },
-    onError: (_err, _capsuleId, context) => {
+    mutationFn: ({ capsuleId, expiresOn }: { capsuleId: string; expiresOn: string | null }) =>
+      addBox(capsuleId, expiresOn),
+    onMutate: ({ capsuleId }) => patchForBox(queryClient, [[capsuleId, BOX_SIZE]]),
+    onError: (_err, _vars, context) => {
       if (context?.previous) queryClient.setQueryData(QK.stock(), context.previous);
     },
     onSettled: () => refreshStockAndActivity(queryClient),
+  });
+}
+
+/** Owner: a variety pack, each cocktail in it on the shelf at once. Optimistic too. */
+export function useAddCollectionBox() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      collection,
+      expiresOn,
+    }: {
+      collection: CollectionDbType;
+      expiresOn: string | null;
+    }) => addCollectionBox(collection.id, expiresOn),
+    onMutate: ({ collection }) =>
+      patchForBox(
+        queryClient,
+        collection.collection_items.map((i) => [i.capsule_id, i.qty]),
+      ),
+    onError: (_err, _vars, context) => {
+      if (context?.previous) queryClient.setQueryData(QK.stock(), context.previous);
+    },
+    onSettled: () => refreshStockAndActivity(queryClient),
+  });
+}
+
+/** Owner: fix or fill in a box's best-by date. Optimistic: the row moves as the sheet closes. */
+export function useSetBoxExpiry() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ boxId, expiresOn }: { boxId: string; expiresOn: string | null }) =>
+      setBoxExpiry(boxId, expiresOn),
+    onMutate: async ({ boxId, expiresOn }) => {
+      await queryClient.cancelQueries({ queryKey: QK.boxes() });
+      const previous = queryClient.getQueryData<BoxDbType[]>(QK.boxes());
+      queryClient.setQueryData<BoxDbType[]>(QK.boxes(), (rows) =>
+        rows?.map((b) => (b.id === boxId ? { ...b, expires_on: expiresOn } : b)),
+      );
+      return { previous };
+    },
+    onError: (_err, _vars, context) => {
+      if (context?.previous) queryClient.setQueryData(QK.boxes(), context.previous);
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: QK.boxes() }),
   });
 }
 
@@ -85,6 +139,7 @@ export function useAdjustStock() {
     onSettled: () => {
       if (queryClient.isMutating({ mutationKey: MK.adjustStock }) === 1) {
         void queryClient.invalidateQueries({ queryKey: QK.stock() });
+        void queryClient.invalidateQueries({ queryKey: QK.boxes() });
       }
     },
   });

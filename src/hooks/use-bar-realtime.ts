@@ -15,12 +15,21 @@ export function useBarRealtime() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
-    const refresh = (queryKey: QueryKey) => () => {
-      if (queryClient.isMutating() === 0) void queryClient.invalidateQueries({ queryKey });
-    };
+    const refresh =
+      (...queryKeys: QueryKey[]) =>
+      () => {
+        if (queryClient.isMutating() > 0) return;
+        for (const queryKey of queryKeys) void queryClient.invalidateQueries({ queryKey });
+      };
     const channel = supabase
       .channel("bar-live")
-      .on("postgres_changes", { event: "*", schema: "public", table: "stock" }, refresh(QK.stock()))
+      // The owner's best-by boxes move with every count (019_boxes.sql), so they ride along
+      // on stock rather than being published themselves.
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "stock" },
+        refresh(QK.stock(), QK.boxes()),
+      )
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "activity" },

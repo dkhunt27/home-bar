@@ -43,16 +43,82 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"capsules": {
+                },"boxes": {
                   Row: {
-                    "created_at": string | null,"description": string | null,"id": string,"img_box": string,"img_pour": string,"name": string,"sort_order": number,"spirit": string,"updated_at": string | null
+                    "capsule_id": string,"collection_id": string | null,"created_at": string,"expires_on": string | null,"id": string,"qty": number,"size": number
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string | null,"description"?: string | null,"id": string,"img_box": string,"img_pour": string,"name": string,"sort_order"?: number,"spirit": string,"updated_at"?: string | null
+                    "capsule_id": string,"collection_id"?: string | null,"created_at"?: string,"expires_on"?: string | null,"id"?: string,"qty": number,"size": number
                   }
                   Update: {
-                    "created_at"?: string | null,"description"?: string | null,"id"?: string,"img_box"?: string,"img_pour"?: string,"name"?: string,"sort_order"?: number,"spirit"?: string,"updated_at"?: string | null
+                    "capsule_id"?: string,"collection_id"?: string | null,"created_at"?: string,"expires_on"?: string | null,"id"?: string,"qty"?: number,"size"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "boxes_capsule_id_fkey"
+      columns: ["capsule_id"]
+isOneToOne: false
+      referencedRelation: "capsules"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "boxes_collection_id_fkey"
+      columns: ["collection_id"]
+isOneToOne: false
+      referencedRelation: "collections"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"capsules": {
+                  Row: {
+                    "created_at": string | null,"description": string | null,"id": string,"img_box": string,"img_pour": string,"name": string,"sold_single": boolean,"sort_order": number,"spirit": string,"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string | null,"description"?: string | null,"id": string,"img_box": string,"img_pour": string,"name": string,"sold_single"?: boolean,"sort_order"?: number,"spirit": string,"updated_at"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string | null,"description"?: string | null,"id"?: string,"img_box"?: string,"img_pour"?: string,"name"?: string,"sold_single"?: boolean,"sort_order"?: number,"spirit"?: string,"updated_at"?: string | null
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"collection_items": {
+                  Row: {
+                    "capsule_id": string,"collection_id": string,"qty": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "capsule_id": string,"collection_id": string,"qty": number
+                  }
+                  Update: {
+                    "capsule_id"?: string,"collection_id"?: string,"qty"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "collection_items_capsule_id_fkey"
+      columns: ["capsule_id"]
+isOneToOne: false
+      referencedRelation: "capsules"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "collection_items_collection_id_fkey"
+      columns: ["collection_id"]
+isOneToOne: false
+      referencedRelation: "collections"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"collections": {
+                  Row: {
+                    "created_at": string | null,"id": string,"img": string,"name": string,"sort_order": number,"updated_at": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string | null,"id": string,"img": string,"name": string,"sort_order"?: number,"updated_at"?: string | null
+                  }
+                  Update: {
+                    "created_at"?: string | null,"id"?: string,"img"?: string,"name"?: string,"sort_order"?: number,"updated_at"?: string | null
                   }
                   Relationships: [
                     
@@ -166,7 +232,10 @@ isOneToOne: true
           }
           Functions: {
             "add_box":
-{ Args: { "p_capsule_id": string }; Returns: number
+{ Args: { "p_capsule_id": string,"p_expires_on"?: string }; Returns: number
+                           },
+"add_collection_box":
+{ Args: { "p_collection_id": string,"p_expires_on"?: string }; Returns: undefined
                            },
 "adjust_stock":
 { Args: { "p_capsule_id": string,"p_delta": number }; Returns: number
@@ -211,6 +280,12 @@ isOneToOne: true
                            },
 "rotate_join_key":
 { Args: Record<PropertyKey, never>; Returns: string
+                           },
+"set_box_expiry":
+{ Args: { "p_box_id": string,"p_expires_on": string }; Returns: undefined
+                           },
+"shelve_box":
+{ Args: { "p_amount": number,"p_capsule_id": string,"p_collection_id": string,"p_expires_on": string,"p_owner_name": string }; Returns: number
                            },
 "take_capsule":
 { Args: { "p_capsule_id": string }; Returns: {

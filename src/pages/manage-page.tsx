@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
+import { AddBoxSheet, type AddBoxTarget } from "../components/add-box-sheet";
 import { CapsuleTile } from "../components/capsule-tile";
 import { LoadError } from "../components/load-error";
 import { Loading } from "../components/loading";
 import { Screen } from "../components/screen";
 import { Stepper } from "../components/stepper";
 import ui from "../components/ui.module.css";
-import { useShelf } from "../hooks/use-bar-data";
-import { useAddBox, useAdjustStock, useSetLowThreshold } from "../hooks/use-bar-mutations";
+import { useBoxes, useShelf } from "../hooks/use-bar-data";
+import { useAdjustStock, useSetLowThreshold } from "../hooks/use-bar-mutations";
+import { useNow } from "../hooks/use-now";
 import {
   BOX_SIZE,
   LOW_THRESHOLD_MAX,
@@ -16,15 +19,18 @@ import {
   statusShort,
 } from "../lib/bar";
 import { cx } from "../lib/cx";
+import { expirySummary, hasPastBestBy } from "../lib/expiry";
 import { IMAGE_WIDTH, sizedImage } from "../lib/images";
-import { capsuleRoute, ROUTES } from "../routes";
+import { capsuleRoute, collectionsForRoute, ROUTES } from "../routes";
 import styles from "./manage-page.module.css";
 
 export default function ManagePage() {
   const { shelf, threshold, isPending, error } = useShelf();
+  const boxes = useBoxes();
+  const now = useNow();
   const setThreshold = useSetLowThreshold();
-  const addBox = useAddBox();
   const adjust = useAdjustStock();
+  const [adding, setAdding] = useState<AddBoxTarget | null>(null);
 
   if (error) return <LoadError error={error} />;
   if (isPending) return <Loading />;
@@ -68,6 +74,19 @@ export default function ManagePage() {
         <span className={styles.cardAction}>Show →</span>
       </Link>
 
+      {/* Best-by dates are a side line here: if they fail to load, the card just says less. */}
+      <Link to={ROUTES.MANAGE_EXPIRING} className={styles.alertCard}>
+        <span className={styles.alertText}>
+          <span className={styles.alertTitle}>Expiring</span>
+          <span
+            className={cx(ui.rowMeta, boxes.data && hasPastBestBy(boxes.data, now) && styles.low)}
+          >
+            {boxes.data ? expirySummary(boxes.data, now) : "Best-by dates, soonest first"}
+          </span>
+        </span>
+        <span className={styles.cardAction}>Show →</span>
+      </Link>
+
       {low.length > 0 && (
         <section className={styles.section}>
           <h2 className={cx(ui.sectionLabel, ui.lowText)}>Running low · {low.length}</h2>
@@ -83,14 +102,26 @@ export default function ManagePage() {
                 <span className={ui.rowName}>{item.capsule.name}</span>
                 <span className={cx(ui.rowMeta, ui.lowText)}>{statusShort(item)}</span>
               </div>
-              <button
-                type="button"
-                className={ui.pillOutline}
-                onClick={() => addBox.mutate(item.capsule.id)}
-                aria-label={`Add a box of ${item.capsule.name}`}
-              >
-                +{BOX_SIZE} box
-              </button>
+              {item.capsule.sold_single ? (
+                <button
+                  type="button"
+                  className={ui.pillOutline}
+                  onClick={() =>
+                    setAdding({ kind: "capsule", capsule: item.capsule, qty: item.qty })
+                  }
+                  aria-label={`Add a box of ${item.capsule.name}`}
+                >
+                  +{BOX_SIZE} box
+                </button>
+              ) : (
+                <Link
+                  to={collectionsForRoute(item.capsule.name)}
+                  className={cx(ui.pillOutline, styles.pillLink)}
+                  aria-label={`Collections with ${item.capsule.name}`}
+                >
+                  Collections
+                </Link>
+              )}
             </div>
           ))}
         </section>
@@ -128,6 +159,8 @@ export default function ManagePage() {
           );
         })}
       </section>
+
+      {adding && <AddBoxSheet target={adding} onClose={() => setAdding(null)} />}
     </Screen>
   );
 }

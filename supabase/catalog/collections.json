@@ -1,0 +1,391 @@
+{
+  "source": "Bartesian's Shopify catalog (bartesian.com/products.json), 2026-11-13. The Advent Calendar is left out: its 12 capsules are a surprise, so there's no list to split it into.",
+  "cocktails": [
+    {
+      "id": "frosted-ambrosia",
+      "name": "Frosted Ambrosia",
+      "spirit": "vodka",
+      "from": "winter-vodka-collection",
+      "desc": "A nostalgic, lightly fruit-forward vodka cocktail with fruit punch, marshmallow, cherry and coconut flavors."
+    },
+    {
+      "id": "the-grinch-appletini",
+      "name": "The Grinch Appletini",
+      "spirit": "vodka",
+      "from": "winter-vodka-collection",
+      "desc": "A shimmering, sweet and tart vodka cocktail with green apple flavors."
+    },
+    {
+      "id": "frosty-navel",
+      "name": "Frosty Navel",
+      "spirit": "vodka",
+      "from": "festive-collection",
+      "desc": "A vibrant vodka cocktail with tangy orange and juicy peach flavors."
+    },
+    {
+      "id": "salted-caramel-espresso-martini",
+      "name": "Salted Caramel Espresso Martini",
+      "spirit": "vodka",
+      "from": "festive-collection",
+      "desc": "A luxurious twist on a favorite, with flavors of rich coffee, buttery caramel and a hint of sea salt."
+    },
+    {
+      "id": "peach-cobbler",
+      "name": "Peach Cobbler",
+      "spirit": "whiskey",
+      "from": "winter-whiskey-collection",
+      "desc": "A sweet and sour whiskey cocktail layering flavors of peach, buttery pie crust and cinnamon."
+    },
+    {
+      "id": "brown-butter-old-fashioned",
+      "name": "Brown Butter Old Fashioned",
+      "spirit": "whiskey",
+      "from": "winter-whiskey-collection",
+      "desc": "A rich, spirit-forward sipper with flavors of indulgent browned butter, bitters and a hint of orange."
+    },
+    {
+      "id": "holiday-spiced-old-fashioned",
+      "name": "Holiday Spiced Old Fashioned",
+      "spirit": "whiskey",
+      "from": "winter-whiskey-collection",
+      "desc": "A festive twist on the classic, with flavors of orange, bitters, cinnamon and seasonal brown spices."
+    },
+    {
+      "id": "ginger-pear-noel",
+      "name": "Ginger Pear Noel",
+      "spirit": "whiskey",
+      "from": "winter-whiskey-collection",
+      "desc": "A sweet blend of ripe pear and lime juices plus a kick of fiery ginger flavor."
+    },
+    {
+      "id": "peary-christmas",
+      "name": "Peary Christmas",
+      "spirit": "tequila",
+      "from": "festive-collection",
+      "desc": "An elegant tequila cocktail with sweet pear, citrus and delicate almond flavors."
+    },
+    {
+      "id": "mistletoe-margarita",
+      "name": "Mistletoe Margarita",
+      "spirit": "tequila",
+      "from": "winter-tequila-collection",
+      "desc": "Jammy pomegranate and baking spice flavors for the perfect seasonal margarita."
+    },
+    {
+      "id": "jollypeno-margarita",
+      "name": "Jollypeño Margarita",
+      "spirit": "tequila",
+      "from": "winter-tequila-collection",
+      "desc": "A margarita bursting with flavors of vibrant pineapple, zesty lime and a kick of jalapeño."
+    },
+    {
+      "id": "berry-and-bright",
+      "name": "Berry & Bright",
+      "spirit": "tequila",
+      "from": "festive-collection",
+      "desc": "A sweet, refreshing tequila cocktail with juicy blueberry, zesty lemon and a hint of cozy cardamom flavor."
+    },
+    {
+      "id": "winter-pear-adise",
+      "name": "Winter Pear-adise",
+      "spirit": "gin",
+      "from": "nice-collection",
+      "desc": "A sweet and tart gin cocktail, blending flavors of juicy pear, earthy sage and a twist of lime."
+    },
+    {
+      "id": "yuletide-hurricane",
+      "name": "Yuletide Hurricane",
+      "spirit": "rum",
+      "from": "naughty-collection",
+      "desc": "A fruity, tropical rum cocktail with added shimmer."
+    },
+    {
+      "id": "tennessee-iced-tea",
+      "name": "Tennessee Iced Tea",
+      "spirit": "multi",
+      "from": "long-island-collection",
+      "desc": "Smooth and proofy, with citrus and cola flavors. Whiskey, vodka and tequila; 4-bottle makers only."
+    },
+    {
+      "id": "hawaiian-iced-tea",
+      "name": "Hawaiian Iced Tea",
+      "spirit": "multi",
+      "from": "long-island-collection",
+      "desc": "A tropical blend of sweet and tart, with lemon, orange and juicy passion fruit. Rum, vodka and tequila; 4-bottle makers only."
+    },
+    {
+      "id": "georgia-peach-iced-tea",
+      "name": "Georgia Peach Iced Tea",
+      "spirit": "multi",
+      "from": "long-island-collection",
+      "desc": "A Southern-inspired mix of sweet peach and lemon with a touch of cola flavor. Rum, vodka and tequila; 4-bottle makers only."
+    },
+    {
+      "id": "long-beach-iced-tea",
+      "name": "Long Beach Iced Tea",
+      "spirit": "multi",
+      "from": "long-island-collection",
+      "desc": "Vibrant and slightly tart, with cranberry and zesty lemon. Rum, vodka and tequila; 4-bottle makers only."
+    },
+    {
+      "id": "strawberry-lemon-drop",
+      "name": "Strawberry Lemon Drop",
+      "spirit": "vodka",
+      "from": "lemon-drop-variety-pack",
+      "desc": "Sweet and tart, with flavors of juicy strawberry and candied lemon."
+    },
+    {
+      "id": "blueberry-lemon-drop",
+      "name": "Blueberry Lemon Drop",
+      "spirit": "vodka",
+      "from": "lemon-drop-variety-pack",
+      "desc": "Jammy blueberry balanced with bright citrus flavor."
+    },
+    {
+      "id": "prickly-pear-lemon-drop",
+      "name": "Prickly Pear Lemon Drop",
+      "spirit": "vodka",
+      "from": "lemon-drop-variety-pack",
+      "desc": "Prickly pear and zesty lemon, with a hint of hibiscus flavor."
+    },
+    {
+      "id": "blue-raspberry-lemon-drop",
+      "name": "Blue Raspberry Lemon Drop",
+      "spirit": "vodka",
+      "from": "lemon-drop-variety-pack",
+      "desc": "Tangy and sweet, with blue raspberry and lemon candy-inspired flavors."
+    },
+    {
+      "id": "pineapple-passion-fruit-refresher",
+      "name": "Pineapple Passion Fruit Refresher",
+      "spirit": "vodka",
+      "from": "refreshers-collection",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/Refresher-Packing-with-Pineapple-Passion-Fruit-Refresher-_Garnish_---Full-Usage.jpg?v=1772472507",
+      "desc": "Juicy pineapple and passion fruit come together in a drink that's pure tropical bliss. Lightly caffeinated, and made to work as a mocktail too."
+    }
+  ],
+  "collections": [
+    {
+      "id": "winter-vodka-collection",
+      "name": "Winter Vodka Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/WinterVodkaCollection.jpg?v=1793028632",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/WinterVodkaCollectionFullAssortmentwithBox.jpg?v=1793032761",
+      "items": {
+        "frosted-ambrosia": 2,
+        "the-grinch-appletini": 2,
+        "frosty-navel": 2,
+        "salted-caramel-espresso-martini": 2
+      }
+    },
+    {
+      "id": "winter-whiskey-collection",
+      "name": "Winter Whiskey Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/WinterWhiskeyCollection.jpg?v=1793028908",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/WinterWhiskeyCollectionFullAssortmentwithBox.jpg?v=1793032831",
+      "items": {
+        "peach-cobbler": 2,
+        "brown-butter-old-fashioned": 2,
+        "holiday-spiced-old-fashioned": 2,
+        "ginger-pear-noel": 2
+      }
+    },
+    {
+      "id": "winter-tequila-collection",
+      "name": "Winter Tequila Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/WinterTequilaCollection.jpg?v=1793028419",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/WinterTequilaCollection1_4b935ae5-c54c-478f-918a-39745bafc004.jpg?v=1793032688",
+      "items": {
+        "peary-christmas": 2,
+        "mistletoe-margarita": 2,
+        "jollypeno-margarita": 2,
+        "berry-and-bright": 2
+      }
+    },
+    {
+      "id": "nice-collection",
+      "name": "Nice Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/NiceCollection.jpg?v=1793028004",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/NiceCollectionFullAssortmentwithBox.jpg?v=1793030322",
+      "items": {
+        "peach-cobbler": 2,
+        "mistletoe-margarita": 2,
+        "winter-pear-adise": 2,
+        "frosted-ambrosia": 2
+      }
+    },
+    {
+      "id": "naughty-collection",
+      "name": "Naughty Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/NaughtyCollection.jpg?v=1793027788",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/NaughtyCollectionFullAssortment3.jpg?v=1793030273",
+      "items": {
+        "yuletide-hurricane": 2,
+        "the-grinch-appletini": 2,
+        "brown-butter-old-fashioned": 2,
+        "berry-and-bright": 2
+      }
+    },
+    {
+      "id": "festive-collection",
+      "name": "Festive Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/FestiveCollection.jpg?v=1793027405",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/FestiveCollectionFullAssortmentwithBox.jpg?v=1793030238",
+      "items": {
+        "peary-christmas": 2,
+        "salted-caramel-espresso-martini": 2,
+        "frosty-navel": 2,
+        "berry-and-bright": 2
+      }
+    },
+    {
+      "id": "holiday-collection",
+      "name": "Holiday Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/HolidayCollection.jpg?v=1793027012",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/HolidayCollectionFullAssortmentwithBox.jpg?v=1793030180",
+      "items": {
+        "jollypeno-margarita": 2,
+        "the-grinch-appletini": 2,
+        "holiday-spiced-old-fashioned": 2,
+        "yuletide-hurricane": 2
+      }
+    },
+    {
+      "id": "long-island-collection",
+      "name": "Long Island Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/LIITCollectionVarietyShot_551c6aba-5b5f-4515-8343-4673ccad72ba.jpg?v=1784321092",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/Iced_Tennessee_Hawaiian_Georgia_Peach_Long_Beach_Iced_Teas_Group.jpg?v=1784128564",
+      "items": {
+        "tennessee-iced-tea": 2,
+        "hawaiian-iced-tea": 2,
+        "georgia-peach-iced-tea": 2,
+        "long-beach-iced-tea": 2
+      }
+    },
+    {
+      "id": "staff-picks-collection",
+      "name": "Staff Picks Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/staff-picks-collection-from-bartesian.png?v=1770738343",
+      "items": {
+        "raspberry-ginger-gimlet-capsules": 2,
+        "jalapeno-lime-shrub-cocktails": 2,
+        "lychee-martini-capsules": 2,
+        "white-sangria-capsules": 2
+      }
+    },
+    {
+      "id": "lemon-drop-variety-pack",
+      "name": "Lemon Drop Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/Lemon_Drop_Collection_3_2026_1.jpg?v=1776703530",
+      "img2": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/Lemon_Drop_Variety_Pack_-_Group_Shot_4.jpg?v=1776785175",
+      "items": {
+        "strawberry-lemon-drop": 2,
+        "blueberry-lemon-drop": 2,
+        "prickly-pear-lemon-drop": 2,
+        "blue-raspberry-lemon-drop": 2
+      }
+    },
+    {
+      "id": "refreshers-collection",
+      "name": "Refreshers Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/Refreshers_-_Cocktails.jpg?v=1772472507",
+      "items": {
+        "strawberry-acai-capsules": 2,
+        "pineapple-passion-fruit-refresher": 2,
+        "blackberry-mango-capsules": 2,
+        "peach-lychee-capsules": 2
+      }
+    },
+    {
+      "id": "classic-cocktails-favorites",
+      "name": "Classic Collection Favorites",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/ClassicCollectionFavorites.png?v=1725547809",
+      "items": {
+        "cosmopolitan-martini-cocktails": 1,
+        "old-fashioned-cocktails": 1,
+        "rum-breeze-cocktails": 1,
+        "vodka-martini-lemon-drop-cocktails": 1,
+        "espresso-martini-capsules": 1,
+        "margarita-cocktails": 1,
+        "whiskey-sour-cocktails": 1,
+        "gin-cocktails-uptown-rocks": 1
+      }
+    },
+    {
+      "id": "rum-lovers-collection",
+      "name": "Rum Lovers Variety Pack",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/rum-lovers-from-bartesian.png?v=1749678320",
+      "items": {
+        "rum-breeze-cocktails": 2,
+        "hurricane": 2,
+        "mai-tai-cocktails": 2,
+        "painkiller-capsules": 2
+      }
+    },
+    {
+      "id": "low-cal-variety-pack",
+      "name": "Low-Cal Variety Pack",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/low-cal-collection-cocktail-capsule-from-bartesian.png?v=1702650007",
+      "items": {
+        "low-calorie-margarita-cocktails": 2,
+        "low-calorie-cosmopolitan-martini-cocktails": 2,
+        "low-calorie-whiskey-sour-cocktails": 2,
+        "low-cal-old-fashioned-capsules": 2
+      }
+    },
+    {
+      "id": "poolside-vibes-collection-variety-pack",
+      "name": "Poolside Vibes Variety Pack",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/poolside_vibes.png?v=1701102673",
+      "items": {
+        "rum-breeze-cocktails": 2,
+        "margarita-cocktails": 2,
+        "northside-cocktails": 2,
+        "ginger-peach-iced-tea-cocktails": 2
+      }
+    },
+    {
+      "id": "vodka-lovers-variety-pack",
+      "name": "Vodka Lovers Variety Pack",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/vodka_lovers.png?v=1755025145",
+      "items": {
+        "espresso-martini-capsules": 2,
+        "vodka-martini-lemon-drop-cocktails": 2,
+        "sex-on-the-beach-vodka-cocktails": 2,
+        "cosmopolitan-martini-cocktails": 2
+      }
+    },
+    {
+      "id": "gin-lovers-collection",
+      "name": "Gin Lovers Variety Pack",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/gin_lovers.png?v=1693419955",
+      "items": {
+        "aviation-cocktails": 2,
+        "bees-knees": 2,
+        "raspberry-ginger-gimlet-capsules": 2,
+        "gin-cocktails-uptown-rocks": 2
+      }
+    },
+    {
+      "id": "whiskey-lovers-collection",
+      "name": "Whiskey Lovers Variety Pack",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/whiskey-lovers-cocktail-capsules-from-bartesian.png?v=1684762947",
+      "items": {
+        "manhattan-cocktails": 2,
+        "old-fashioned-cocktails": 2,
+        "whiskey-sour-cocktails": 2,
+        "sidecar-capsules": 2
+      }
+    },
+    {
+      "id": "tropical-margarita-collection",
+      "name": "Tropical Margarita Collection",
+      "img": "https://cdn.shopify.com/s/files/1/0038/6049/6433/files/tropical-cocktail-capsules-from-bartesian_a2e2f091-808c-4b42-90f9-234b44b79b3d.png?v=1753729981",
+      "items": {
+        "blackberry-margarita-cocktails": 2,
+        "mango-margarita-cocktails": 2,
+        "passion-fruit-margarita-cocktails": 2,
+        "pineapple-margarita-capsules": 2
+      }
+    }
+  ]
+}

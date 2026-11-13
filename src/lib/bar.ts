@@ -3,7 +3,13 @@
 // spirit tabs appear) is unit-tested in bar.test.ts.
 
 import { ROUTES } from "../routes";
-import type { CapsuleDbType, SettingsDbType, SpiritType, StockDbType } from "../types";
+import type {
+  CapsuleDbType,
+  CollectionDbType,
+  SettingsDbType,
+  SpiritType,
+  StockDbType,
+} from "../types";
 
 /** One Bartesian box. */
 export const BOX_SIZE = 8;
@@ -116,15 +122,80 @@ export function searchShelf(items: ShelfItem[], query: string): ShelfItem[] {
   return query.trim() ? items.filter((i) => matchesSearch(i.capsule, query)) : items;
 }
 
-/** Add a capsule's list: the catalog A–Z, narrowed by the spirit tab and the search box. */
+/** Add a capsule's list: the catalog A–Z, narrowed by the spirit tab and the search box.
+ * Cocktails that only come in a collection are left out: there's no box of 8 to add. */
 export function catalogRows(
   capsules: CapsuleDbType[],
   filter: SpiritFilter,
   query: string,
 ): CapsuleDbType[] {
   return capsules
-    .filter((c) => (filter === "all" || c.spirit === filter) && matchesSearch(c, query))
+    .filter(
+      (c) => c.sold_single && (filter === "all" || c.spirit === filter) && matchesSearch(c, query),
+    )
     .sort((a, b) => a.name.localeCompare(b.name));
+}
+
+// ── Collections ────────────────────────────────────────────────────────────────────────
+
+/** A variety pack with its cocktails looked up, A–Z. */
+export interface CollectionView {
+  collection: CollectionDbType;
+  items: { capsule: CapsuleDbType; qty: number }[];
+  /** Capsules in the box: 8 for every pack Bartesian sells today. */
+  size: number;
+}
+
+export function collectionView(
+  collection: CollectionDbType,
+  capsulesById: Map<string, CapsuleDbType>,
+): CollectionView {
+  const items = collection.collection_items
+    .flatMap(({ capsule_id, qty }) => {
+      const capsule = capsulesById.get(capsule_id);
+      return capsule ? [{ capsule, qty }] : [];
+    })
+    .sort((a, b) => a.capsule.name.localeCompare(b.capsule.name));
+  return { collection, items, size: items.reduce((sum, i) => sum + i.qty, 0) };
+}
+
+/** Add a capsule's Collections list, A–Z. A pack shows under every spirit it has a cocktail
+ * of, and the search box matches the pack's name or any cocktail in it ("frosty" finds both
+ * packs with a Frosty Navel). */
+export function collectionRows(
+  collections: CollectionDbType[],
+  capsules: CapsuleDbType[],
+  filter: SpiritFilter,
+  query: string,
+): CollectionView[] {
+  const byId = new Map(capsules.map((c) => [c.id, c]));
+  const q = query.trim().toLowerCase();
+  return collections
+    .map((c) => collectionView(c, byId))
+    .filter(
+      ({ collection, items }) =>
+        (filter === "all" || items.some((i) => i.capsule.spirit === filter)) &&
+        (!q ||
+          collection.name.toLowerCase().includes(q) ||
+          items.some((i) => matchesSearch(i.capsule, q))),
+    )
+    .sort((a, b) => a.collection.name.localeCompare(b.collection.name));
+}
+
+/** "Berry & Bright, Frosty Navel and Peary Christmas". */
+function listNames(names: string[]): string {
+  if (names.length < 2) return names.join("");
+  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+}
+
+/** What's in the box: "2 each of Berry & Bright, Frosty Navel…", or "2 Margarita and 1
+ * Mai Tai" for an uneven pack. */
+export function collectionContents(items: CollectionView["items"]): string {
+  const qtys = new Set(items.map((i) => i.qty));
+  if (qtys.size === 1 && items.length > 1) {
+    return `${items[0].qty} each of ${listNames(items.map((i) => i.capsule.name))}`;
+  }
+  return listNames(items.map((i) => `${i.qty} ${i.capsule.name}`));
 }
 
 export function parseSpiritFilter(value: string | null): SpiritFilter {

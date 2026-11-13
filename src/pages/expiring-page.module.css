@@ -1,0 +1,71 @@
+/* Same header as Add a capsule and Guest link, the other screens pushed from Manage. */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: -4px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.lead {
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ui.listRow as a button: drop the button chrome, keep the divider. */
+.row {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--divider);
+  background: none;
+  text-align: left;
+}
+
+.when {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  color: var(--muted);
+}
+
+.date {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.relative {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.addDate {
+  flex: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--amber);
+}
+
+/* After the base rules above, so they win over their muted color. */
+.soon {
+  color: var(--amber);
+}
+
+.low {
+  color: var(--low);
+}
