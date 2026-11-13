@@ -8,11 +8,18 @@ import { defineConfig } from "vitest/config";
 // and status bar match the smoked-oak bg token.
 const BG = "#130e0a";
 
+/** The build time in UTC as YYYYMMDD_HHMMSS, shown at the foot of the Bar page. CI builds right
+ * before `wrangler deploy`, so it dates the deploy, and an installed app that hasn't taken
+ * the update yet shows the old one. */
+const buildVersion = () =>
+  new Date().toISOString().replace(/[-:]/g, "").replace("T", "_").slice(0, 15);
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => {
   process.env = { ...process.env, ...loadEnv(mode, process.cwd(), "") };
 
   return {
+    define: { __APP_VERSION__: JSON.stringify(buildVersion()) },
     // The Cloudflare plugin adds a Worker environment for worker/index.ts. Vitest injects
     // `resolve.external` (node builtins) into every environment, which the plugin rejects
     // outright, and nothing under test touches the Worker, so it's skipped there.

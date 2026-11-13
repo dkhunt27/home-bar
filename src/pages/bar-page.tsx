@@ -136,6 +136,8 @@ export default function BarPage() {
         </div>
       )}
 
+      <p className={styles.version}>Version {__APP_VERSION__}</p>
+
       {taking && (
         <TakeSheet item={taking} onClose={() => setTaking(null)} onTaken={onTaken(taking)} />
       )}

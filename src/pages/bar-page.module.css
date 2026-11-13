@@ -213,6 +213,18 @@
   color: var(--muted);
 }
 
+/* Build stamp at the foot of the page. The auto margin keeps it at the bottom of the screen
+   when the shelf is short. */
+.version {
+  flex: none;
+  margin-top: auto;
+  padding-top: 8px;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+
 /* After the base rules above, so it wins over their muted color. */
 .low {
   color: var(--low);
