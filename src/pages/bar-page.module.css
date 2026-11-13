@@ -1,0 +1,219 @@
+.header {
+  position: relative;
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0 18px;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 46px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.totals {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-style: italic;
+  color: var(--text-soft);
+}
+
+/* Owner only. */
+.lowBanner {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--low-border);
+  border-radius: 16px;
+  background: var(--low-bg);
+  color: var(--text);
+}
+
+.lowText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lowCount {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.lowNames {
+  font-size: 13px;
+  color: var(--low-soft);
+}
+
+.restock {
+  flex: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--amber);
+}
+
+.toolbar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.filterTitle {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.dimmed {
+  opacity: 0.5;
+}
+
+/* ── Grid ─────────────────────────────────────────────── */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 14px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
+}
+
+.qtyPill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--amber);
+  color: var(--amber-ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.qtyPillLow {
+  background: var(--low);
+}
+
+.qtyPillOut {
+  background: var(--out-pill);
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 0 2px;
+}
+
+.cardName {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.cardCaption {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── List ─────────────────────────────────────────────── */
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--divider);
+}
+
+.rowLink {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.rowText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.rowName {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.rowMeta {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.rowQty {
+  min-width: 22px;
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--amber);
+}
+
+.takeButton {
+  flex: none;
+  height: 44px;
+  padding: 0 16px;
+  border: 1px solid var(--amber);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--amber);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.takeButton:disabled {
+  border-color: var(--border);
+  color: var(--muted);
+}
+
+/* After the base rules above, so it wins over their muted color. */
+.low {
+  color: var(--low);
+}

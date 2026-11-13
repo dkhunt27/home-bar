@@ -1,0 +1,24 @@
+.loading {
+  display: grid;
+  place-items: center;
+  min-height: 100dvh;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--amber);
+  opacity: 0;
+  animation: pulse 1.2s ease-in-out 400ms infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.15;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}

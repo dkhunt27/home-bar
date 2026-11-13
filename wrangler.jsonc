@@ -1,0 +1,43 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "home-bar",
+  "compatibility_date": "2026-10-01",
+  "observability": {
+    "enabled": true
+  },
+  "upload_source_maps": true,
+  "main": "./worker/index.ts",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    // With SPA not-found handling, a browser navigation to a non-asset path gets index.html
+    // straight from the assets layer and the Worker never runs. Route the Worker's own
+    // paths to it first.
+    "run_worker_first": ["/api/*"]
+  },
+  // Every 30 minutes: email the owner about any low-stock alert the app's own call to
+  // /api/low-stock/notify missed (phone went offline mid-pour, tab closed) and about new
+  // guests, delete stale anonymous users, and ping Supabase so a free-tier project never sits
+  // idle long enough to be paused.
+  "triggers": {
+    "crons": ["*/30 * * * *"]
+  },
+  // Worker runtime copies of the Supabase config. Not redundant with the SPA's: Vite bakes
+  // its copies into the client bundle at build time, while the Worker reads these at
+  // runtime. tools/build-prod.mjs builds the SPA from these same values so the two can't
+  // drift. Safe to commit: the publishable key is public by design and guarded by RLS.
+  // Secrets (SUPABASE_SERVICE_ROLE_KEY, MAILEROO_API_KEY) are set with
+  // `npx wrangler secret put`, never here. Local dev overrides all of these from .env.
+  "vars": {
+    "VITE_SUPABASE_URL": "https://mhsohmkiefatecjgaehk.supabase.co",
+    "VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_B4ye1c44Q_WeIOsAuzTQrQ_JXo-ying",
+    // Sender for the low-stock email, e.g. "Home Bar <bar@yourdomain.com>". Must be on a
+    // domain verified in Maileroo. Left blank, the email is off ("not configured").
+    "ALERT_FROM_EMAIL": "",
+    // The deployed site, e.g. https://home-bar.<you>.workers.dev. Only the cron needs it, for
+    // the "Restock in the app" link (the notify route uses its own request's origin).
+    "APP_URL": ""
+  },
+  "compatibility_flags": ["nodejs_compat"]
+}

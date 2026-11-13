@@ -1,0 +1,41 @@
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 10;
+  display: flex;
+  width: 100%;
+  max-width: var(--app-max-width);
+  height: calc(var(--nav-height) + var(--safe-bottom));
+  padding-bottom: calc(8px + var(--safe-bottom));
+  transform: translateX(-50%);
+  border-top: 1px solid var(--divider);
+  background: var(--bg);
+}
+
+.item {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.indicator {
+  width: 18px;
+  height: 3px;
+  border-radius: 2px;
+  background: transparent;
+}
+
+.active {
+  color: var(--amber);
+}
+
+.active .indicator {
+  background: var(--amber);
+}

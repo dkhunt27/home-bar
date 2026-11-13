@@ -1,0 +1,15 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18px;
+  min-height: 100dvh;
+  padding: 40px 28px;
+}
+
+.detail {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--text-soft);
+  overflow-wrap: anywhere;
+}

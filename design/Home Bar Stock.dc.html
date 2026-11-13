@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Figtree:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:oklch(0.93 0.008 80);-webkit-font-smoothing:antialiased}
+a{color:oklch(0.55 0.12 60)}a:hover{color:oklch(0.45 0.12 60)}
+input::placeholder{color:oklch(0.62 0.02 70)}
+button{font-family:inherit;cursor:pointer}
+*::-webkit-scrollbar{display:none}
+</style>
+</helmet>
+<section style="padding:56px 64px 80px;display:flex;flex-direction:column;gap:32px;font-family:'Figtree',sans-serif;color:oklch(0.25 0.015 60)">
+  <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
+    <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:oklch(0.5 0.02 60)">Turn 1 · Home bar capsule tracker</div>
+    <div style="font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:500;line-height:1.05">Three moody directions</div>
+    <div style="font-size:15px;line-height:1.55;color:oklch(0.42 0.02 60);text-wrap:pretty"><a href="#1a">1a</a> is the full clickable prototype covering login, stock, detail, checkout, activity, and manage. Use house code <strong>1234</strong> as a guest, or the Owner tab to restock. <a href="#1b">1b</a> and <a href="#1c">1c</a> show the same stock screen in two other treatments, with working filters.</div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:56px;align-items:flex-start">
+
+    <div id="1a" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="background:oklch(0.25 0.015 60);color:oklch(0.95 0.012 80);font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px">1a</span>
+        <span style="font-size:15px;font-weight:600">Speakeasy</span>
+        <span style="font-size:14px;color:oklch(0.45 0.02 60)">Amber on smoked oak · full prototype</span>
+      </div>
+      <div style="position:relative;width:390px;height:844px;border-radius:40px;overflow:hidden;background:oklch(0.17 0.012 60);color:oklch(0.95 0.012 80);font-family:'Figtree',sans-serif;font-variant-numeric:lining-nums;box-shadow:0 40px 80px -30px rgba(40,25,10,.55)">
+
+        <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;padding:72px 28px 36px;gap:26px;overflow-y:auto">
+            <div style="font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:oklch(0.80 0.12 72);font-weight:600">{{ barName }}</div>
+            <div style="font-family:'Cormorant Garamond',serif;font-size:54px;line-height:.95;font-weight:500;letter-spacing:-.01em">What are we <em style="color:oklch(0.80 0.12 72)">pouring</em> tonight?</div>
+            <div style="display:flex;gap:10px">
+              <sc-for list="{{ loginPreview }}" as="p" hint-placeholder-count="3">
+                <div style="width:104px;height:104px;border-radius:20px;background:oklch(0.93 0.018 80);overflow:hidden;flex:none"><img src="{{ p.img }}" alt="{{ p.name }}" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:6px;box-sizing:border-box"></div>
+              </sc-for>
+            </div>
+            <div style="margin-top:auto;display:flex;flex-direction:column;gap:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;background:oklch(0.215 0.014 60);border-radius:14px;padding:4px;gap:4px">
+                <sc-for list="{{ loginTabs }}" as="t" hint-placeholder-count="2">
+                  <button onClick="{{ t.onClick }}" style="height:40px;border:none;border-radius:11px;background:{{ t.bg }};color:{{ t.fg }};font-size:14px;font-weight:600">{{ t.label }}</button>
+                </sc-for>
+              </div>
+              <sc-if value="{{ isGuestTab }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <input value="{{ name }}" onChange="{{ onName }}" placeholder="Your name" style="height:54px;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60);border-radius:14px;color:oklch(0.95 0.012 80);padding:0 16px;font-size:16px;font-family:inherit;outline:none">
+                  <input value="{{ code }}" onChange="{{ onCode }}" placeholder="House code" inputMode="numeric" maxLength="4" style="height:54px;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60);border-radius:14px;color:oklch(0.95 0.012 80);padding:0 16px;font-size:16px;font-family:inherit;letter-spacing:.3em;outline:none">
+                  <sc-if value="{{ hasErr }}" hint-placeholder-val="{{ false }}"><div style="font-size:14px;color:oklch(0.74 0.13 40)">{{ err }}</div></sc-if>
+                  <button onClick="{{ enterGuest }}" style="height:56px;border:none;border-radius:16px;background:oklch(0.80 0.12 72);color:oklch(0.20 0.02 60);font-size:16px;font-weight:700;margin-top:4px">Enter the bar</button>
+                  <div style="font-size:13px;color:oklch(0.74 0.02 70);text-align:center">Ask the host for the house code · demo 1234</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ isOwnerTab }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <input value="{{ email }}" onChange="{{ onEmail }}" placeholder="you@email.com" type="email" style="height:54px;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60);border-radius:14px;color:oklch(0.95 0.012 80);padding:0 16px;font-size:16px;font-family:inherit;outline:none">
+                  <button onClick="{{ enterOwner }}" style="height:56px;border:none;border-radius:16px;background:oklch(0.80 0.12 72);color:oklch(0.20 0.02 60);font-size:16px;font-weight:700;margin-top:4px">Send sign-in link</button>
+                  <div style="font-size:13px;color:oklch(0.74 0.02 70);text-align:center">Owners can restock, edit and get low-stock alerts</div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isBar }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:0;left:0;right:0;bottom:72px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:56px 20px 28px;display:flex;flex-direction:column;gap:18px">
+            <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:4px 0 18px;border-bottom:1px solid oklch(0.30 0.015 60);flex:none">
+              <button onClick="{{ logout }}" title="Sign out" style="position:absolute;top:-8px;right:0;width:40px;height:40px;border-radius:50%;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60);color:oklch(0.80 0.12 72);font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600">{{ initial }}</button>
+              <div style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:oklch(0.80 0.12 72);font-weight:700">Tonight's pour list</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:500;line-height:1">{{ ownerName }}'s Cabinet</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:19px;color:oklch(0.80 0.018 70)">{{ totalQty }} capsules, {{ kinds }} cocktails</div>
+            </div>
+            <sc-if value="{{ showLowBanner }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ goManage }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-radius:16px;background:oklch(0.25 0.04 40);border:1px solid oklch(0.45 0.09 40);color:oklch(0.95 0.012 80);text-align:left">
+                <span style="display:flex;flex-direction:column;gap:2px"><span style="font-size:15px;font-weight:600">{{ lowCount }} running low</span><span style="font-size:13px;color:oklch(0.85 0.04 50)">{{ lowNames }}</span></span>
+                <span style="font-size:14px;font-weight:600;color:oklch(0.80 0.12 72);flex:none">Restock →</span>
+              </button>
+            </sc-if>
+            <div style="display:flex;gap:20px;overflow-x:auto;margin:0 -20px;padding:0 20px;scrollbar-width:none;flex:none">
+              <sc-for list="{{ chipsA }}" as="c" hint-placeholder-count="5">
+                <button onClick="{{ c.onClick }}" style="background:none;border:none;border-bottom:2px solid {{ c.bd }};padding:6px 0 8px;min-height:44px;color:{{ c.fg }};font-size:15px;font-weight:700;white-space:nowrap;flex:none;letter-spacing:.02em">{{ c.label }}</button>
+              </sc-for>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:22px;font-weight:500">{{ filterTitle }}</div>
+              <div style="display:flex;background:oklch(0.215 0.014 60);border-radius:12px;padding:3px;gap:2px">
+                <button onClick="{{ setGrid }}" title="Grid" style="width:40px;height:34px;border:none;border-radius:9px;background:{{ gridBtnBg }};display:grid;place-items:center">
+                  <span style="display:grid;grid-template-columns:6px 6px;gap:2px"><span style="width:6px;height:6px;border-radius:1.5px;background:{{ gridIcon }}"></span><span style="width:6px;height:6px;border-radius:1.5px;background:{{ gridIcon }}"></span><span style="width:6px;height:6px;border-radius:1.5px;background:{{ gridIcon }}"></span><span style="width:6px;height:6px;border-radius:1.5px;background:{{ gridIcon }}"></span></span>
+                </button>
+                <button onClick="{{ setList }}" title="List" style="width:40px;height:34px;border:none;border-radius:9px;background:{{ listBtnBg }};display:grid;place-items:center">
+                  <span style="display:flex;flex-direction:column;gap:2px"><span style="width:14px;height:2.5px;border-radius:1px;background:{{ listIcon }}"></span><span style="width:14px;height:2.5px;border-radius:1px;background:{{ listIcon }}"></span><span style="width:14px;height:2.5px;border-radius:1px;background:{{ listIcon }}"></span></span>
+                </button>
+              </div>
+            </div>
+            <sc-if value="{{ isGrid }}" hint-placeholder-val="{{ true }}">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px 14px">
+                <sc-for list="{{ itemsA }}" as="it" hint-placeholder-count="6">
+                  <button onClick="{{ it.open }}" style="background:none;border:none;padding:0;color:inherit;text-align:left;display:flex;flex-direction:column;gap:9px;opacity:{{ it.dim }}">
+                    <div style="position:relative;width:100%;aspect-ratio:1;border-radius:20px;background:oklch(0.93 0.018 80);overflow:hidden">
+                      <img src="{{ it.img }}" alt="{{ it.name }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:8px;box-sizing:border-box">
+                      <span style="position:absolute;top:10px;right:10px;background:{{ it.qtyBg }};color:oklch(0.20 0.02 60);font-weight:700;font-size:13px;padding:4px 9px;border-radius:999px">{{ it.qtyText }}</span>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:3px;padding:0 2px">
+                      <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;line-height:1.05">{{ it.name }}</span>
+                      <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:{{ it.statusColor }}">{{ it.gridSub }}</span>
+                    </div>
+                  </button>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ isList }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column">
+                <sc-for list="{{ itemsA }}" as="it" hint-placeholder-count="6">
+                  <div onClick="{{ it.open }}" style="display:flex;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid oklch(0.26 0.014 60);cursor:pointer;opacity:{{ it.dim }}">
+                    <div style="width:64px;height:64px;border-radius:14px;background:oklch(0.93 0.018 80);overflow:hidden;flex:none"><img src="{{ it.img }}" alt="{{ it.name }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:4px;box-sizing:border-box"></div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                      <span style="font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:600;line-height:1.05">{{ it.name }}</span>
+                      <span style="font-size:13px;color:{{ it.statusColor }}">{{ it.spiritLabel }} · {{ it.statusShort }}</span>
+                    </div>
+                    <span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:oklch(0.80 0.12 72);min-width:22px;text-align:right">{{ it.qty }}</span>
+                    <button onClick="{{ it.quickTake }}" disabled="{{ it.out }}" style="height:44px;padding:0 16px;border-radius:999px;border:1px solid {{ it.takeBd }};background:transparent;color:{{ it.takeFg }};font-size:14px;font-weight:600;flex:none">Take</button>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ noItems }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:40px 0;text-align:center;color:oklch(0.74 0.02 70);font-size:15px">Nothing on the shelf here yet.</div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isDetail }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding-bottom:120px">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:52px 20px 14px">
+              <button onClick="{{ goBar }}" style="width:44px;height:44px;border-radius:50%;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60);color:oklch(0.95 0.012 80);font-size:20px">←</button>
+              <div style="display:flex;background:oklch(0.215 0.014 60);border-radius:999px;padding:3px;gap:2px">
+                <sc-for list="{{ imgTabs }}" as="t" hint-placeholder-count="2">
+                  <button onClick="{{ t.onClick }}" style="height:34px;padding:0 14px;border:none;border-radius:999px;background:{{ t.bg }};color:{{ t.fg }};font-size:13px;font-weight:600">{{ t.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+            <div style="margin:0 20px;aspect-ratio:1;border-radius:28px;background:oklch(0.93 0.018 80);overflow:hidden"><img src="{{ sel.imgBig }}" alt="{{ sel.name }}" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:14px;box-sizing:border-box"></div>
+            <div style="padding:22px 20px 0;display:flex;flex-direction:column;gap:10px">
+              <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:oklch(0.80 0.12 72)">{{ sel.spiritLabel }}</div>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:500;line-height:1">{{ sel.name }}</div>
+              <div style="font-size:15px;font-weight:600;color:{{ sel.statusColor }}">{{ sel.statusText }}</div>
+              <div style="font-size:15px;line-height:1.6;color:oklch(0.80 0.018 70);text-wrap:pretty">{{ sel.desc }}</div>
+              <sc-if value="{{ isOwner }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:8px;display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:18px;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60)">
+                  <span style="flex:1;font-size:14px;font-weight:600">Shelf count</span>
+                  <button onClick="{{ sel.dec }}" style="width:40px;height:40px;border-radius:50%;border:1px solid oklch(0.36 0.015 60);background:none;color:oklch(0.95 0.012 80);font-size:20px">−</button>
+                  <span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;min-width:28px;text-align:center">{{ sel.qty }}</span>
+                  <button onClick="{{ sel.inc }}" style="width:40px;height:40px;border-radius:50%;border:1px solid oklch(0.36 0.015 60);background:none;color:oklch(0.95 0.012 80);font-size:20px">+</button>
+                  <button onClick="{{ sel.box }}" style="height:40px;padding:0 12px;border-radius:999px;border:none;background:oklch(0.30 0.03 70);color:oklch(0.80 0.12 72);font-size:13px;font-weight:700">+8 box</button>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+          <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 20px 30px;background:oklch(0.17 0.012 60);border-top:1px solid oklch(0.26 0.014 60)">
+            <sc-if value="{{ sel.canTake }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ openSheet }}" style="width:100%;height:58px;border:none;border-radius:18px;background:oklch(0.80 0.12 72);color:oklch(0.20 0.02 60);font-size:17px;font-weight:700">Take one</button>
+            </sc-if>
+            <sc-if value="{{ sel.out }}" hint-placeholder-val="{{ false }}">
+              <div style="width:100%;height:58px;border-radius:18px;background:oklch(0.215 0.014 60);color:oklch(0.74 0.02 70);font-size:15px;font-weight:600;display:grid;place-items:center">Out of stock · ask {{ ownerName }} to restock</div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;gap:18px;text-align:center">
+            <div style="width:230px;height:230px;border-radius:50%;background:oklch(0.93 0.018 80);overflow:hidden"><img src="{{ last.img2 }}" alt="{{ last.name }}" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:22px;box-sizing:border-box"></div>
+            <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:50px;font-weight:500;line-height:1;margin-top:10px">Cheers, {{ userName }}.</div>
+            <div style="font-size:16px;color:oklch(0.80 0.018 70)">One {{ last.name }} checked out · {{ last.qty }} left</div>
+            <sc-if value="{{ last.lowNow }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:14px;padding:8px 14px;border-radius:999px;background:oklch(0.25 0.04 40);color:oklch(0.88 0.05 50)">Running low · {{ ownerName }} has been notified</div>
+            </sc-if>
+            <div style="width:100%;display:flex;flex-direction:column;gap:8px;margin-top:24px">
+              <button onClick="{{ goBar }}" style="height:58px;border:none;border-radius:18px;background:oklch(0.80 0.12 72);color:oklch(0.20 0.02 60);font-size:17px;font-weight:700">Back to the bar</button>
+              <button onClick="{{ undo }}" style="height:48px;border:none;background:none;color:oklch(0.74 0.02 70);font-size:15px;font-weight:600">Undo</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isActivity }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:0;left:0;right:0;bottom:72px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:56px 20px 28px;display:flex;flex-direction:column;gap:20px">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:500;line-height:1">Activity</div>
+              <div style="font-size:14px;color:oklch(0.74 0.02 70)">Every pour and restock</div>
+            </div>
+            <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column">
+                <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:oklch(0.74 0.02 70);padding-bottom:6px">{{ g.label }}</div>
+                <sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid oklch(0.26 0.014 60)">
+                    <div style="width:46px;height:46px;border-radius:12px;background:oklch(0.93 0.018 80);overflow:hidden;flex:none"><img src="{{ r.img }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:3px;box-sizing:border-box"></div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:15px;line-height:1.3"><strong style="font-weight:700">{{ r.who }}</strong> {{ r.verb }} {{ r.name }}</span>
+                      <span style="font-size:13px;color:oklch(0.74 0.02 70)">{{ r.time }}</span>
+                    </div>
+                    <span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:{{ r.amtColor }}">{{ r.amt }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isManage }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;top:0;left:0;right:0;bottom:72px;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:56px 20px 28px;display:flex;flex-direction:column;gap:22px">
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:12px">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <div style="font-family:'Cormorant Garamond',serif;font-size:46px;font-weight:500;line-height:1">Manage</div>
+                <div style="font-size:14px;color:oklch(0.74 0.02 70)">Restock, edit counts, set alerts</div>
+              </div>
+              <button onClick="{{ goAdd }}" style="height:42px;padding:0 16px;border-radius:999px;border:none;background:oklch(0.80 0.12 72);color:oklch(0.20 0.02 60);font-size:14px;font-weight:700;flex:none">+ Add capsule</button>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;padding:16px;border-radius:18px;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60)">
+              <div style="flex:1;display:flex;flex-direction:column;gap:2px">
+                <span style="font-size:15px;font-weight:600">Low-stock alert</span>
+                <span style="font-size:13px;color:oklch(0.74 0.02 70)">Notify me at {{ threshold }} or fewer</span>
+              </div>
+              <button onClick="{{ thDec }}" style="width:40px;height:40px;border-radius:50%;border:1px solid oklch(0.36 0.015 60);background:none;color:oklch(0.95 0.012 80);font-size:20px">−</button>
+              <span style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;min-width:22px;text-align:center">{{ threshold }}</span>
+              <button onClick="{{ thInc }}" style="width:40px;height:40px;border-radius:50%;border:1px solid oklch(0.36 0.015 60);background:none;color:oklch(0.95 0.012 80);font-size:20px">+</button>
+            </div>
+            <sc-if value="{{ hasLow }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column">
+                <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:oklch(0.74 0.13 40);padding-bottom:6px">Running low · {{ lowCount }}</div>
+                <sc-for list="{{ lowItems }}" as="it" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid oklch(0.26 0.014 60)">
+                    <div style="width:46px;height:46px;border-radius:12px;background:oklch(0.93 0.018 80);overflow:hidden;flex:none"><img src="{{ it.img }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:3px;box-sizing:border-box"></div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                      <span style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;line-height:1.05">{{ it.name }}</span>
+                      <span style="font-size:13px;color:oklch(0.74 0.13 40)">{{ it.statusShort }}</span>
+                    </div>
+                    <button onClick="{{ it.box }}" style="height:40px;padding:0 14px;border-radius:999px;border:1px solid oklch(0.80 0.12 72);background:none;color:oklch(0.80 0.12 72);font-size:13px;font-weight:700;flex:none">+8 box</button>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-direction:column">
+              <div style="font-size:12px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:oklch(0.74 0.02 70);padding-bottom:6px">Shelf · {{ kindsAll }} cocktails</div>
+              <sc-for list="{{ shelf }}" as="it" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid oklch(0.26 0.014 60)">
+                  <div onClick="{{ it.open }}" style="width:46px;height:46px;border-radius:12px;background:oklch(0.93 0.018 80);overflow:hidden;flex:none;cursor:pointer"><img src="{{ it.img }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:3px;box-sizing:border-box"></div>
+                  <div onClick="{{ it.open }}" style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;cursor:pointer">
+                    <span style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;line-height:1.05">{{ it.name }}</span>
+                    <span style="font-size:13px;color:{{ it.statusColor }}">{{ it.spiritLabel }}</span>
+                  </div>
+                  <button onClick="{{ it.dec }}" style="width:38px;height:38px;border-radius:50%;border:1px solid oklch(0.36 0.015 60);background:none;color:oklch(0.95 0.012 80);font-size:18px;flex:none">−</button>
+                  <span style="font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;min-width:24px;text-align:center;color:{{ it.statusColor }}">{{ it.qty }}</span>
+                  <button onClick="{{ it.inc }}" style="width:38px;height:38px;border-radius:50%;border:1px solid oklch(0.36 0.015 60);background:none;color:oklch(0.95 0.012 80);font-size:18px;flex:none">+</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isAdd }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:52px 20px 28px;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;gap:14px">
+              <button onClick="{{ goManage }}" style="width:44px;height:44px;border-radius:50%;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60);color:oklch(0.95 0.012 80);font-size:20px;flex:none">←</button>
+              <div style="font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:500;line-height:1">Add a capsule</div>
+            </div>
+            <input value="{{ q }}" onChange="{{ onQ }}" placeholder="Search the Bartesian catalog" style="height:52px;background:oklch(0.215 0.014 60);border:1px solid oklch(0.30 0.015 60);border-radius:14px;color:oklch(0.95 0.012 80);padding:0 16px;font-size:16px;font-family:inherit;outline:none">
+            <div style="display:flex;flex-direction:column">
+              <sc-for list="{{ addRows }}" as="it" hint-placeholder-count="8">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid oklch(0.26 0.014 60)">
+                  <div style="width:52px;height:52px;border-radius:12px;background:oklch(0.93 0.018 80);overflow:hidden;flex:none"><img src="{{ it.img }}" alt="" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:3px;box-sizing:border-box"></div>
+                  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                    <span style="font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;line-height:1.05">{{ it.name }}</span>
+                    <span style="font-size:13px;color:oklch(0.74 0.02 70)">{{ it.spiritLabel }} · {{ it.have }}</span>
+                  </div>
+                  <button onClick="{{ it.add }}" style="height:40px;padding:0 14px;border-radius:999px;border:1px solid oklch(0.80 0.12 72);background:{{ it.btnBg }};color:{{ it.btnFg }};font-size:13px;font-weight:700;flex:none">+8 box</button>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ showNav }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:0;right:0;bottom:0;height:72px;background:oklch(0.17 0.012 60);border-top:1px solid oklch(0.26 0.014 60);display:flex;padding-bottom:8px;box-sizing:border-box">
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="3">
+              <button onClick="{{ n.onClick }}" style="flex:1;border:none;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;color:{{ n.color }};font-size:13px;font-weight:600">
+                <span style="width:18px;height:3px;border-radius:2px;background:{{ n.dot }}"></span>{{ n.label }}
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ closeSheet }}" style="position:absolute;inset:0;background:rgba(8,5,2,.62);display:flex;align-items:flex-end">
+            <div onClick="{{ stop }}" style="width:100%;background:oklch(0.215 0.014 60);border-radius:30px 30px 0 0;padding:12px 20px 32px;display:flex;flex-direction:column;gap:18px;border-top:1px solid oklch(0.32 0.015 60)">
+              <div style="width:40px;height:5px;border-radius:3px;background:oklch(0.38 0.015 60);align-self:center"></div>
+              <div style="display:flex;align-items:center;gap:16px">
+                <div style="width:84px;height:84px;border-radius:18px;background:oklch(0.93 0.018 80);overflow:hidden;flex:none"><img src="{{ sel.img }}" alt="" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:4px;box-sizing:border-box"></div>
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <span style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;line-height:1.02">Take one {{ sel.name }}?</span>
+                  <span style="font-size:14px;color:oklch(0.80 0.018 70)">Leaves {{ sel.after }} in the bar</span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1.6fr;gap:10px">
+                <button onClick="{{ closeSheet }}" style="height:56px;border-radius:16px;border:1px solid oklch(0.36 0.015 60);background:none;color:oklch(0.95 0.012 80);font-size:16px;font-weight:600">Cancel</button>
+                <button onClick="{{ take }}" style="height:56px;border-radius:16px;border:none;background:oklch(0.80 0.12 72);color:oklch(0.20 0.02 60);font-size:16px;font-weight:700">Yes, pour it</button>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div id="1b" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="background:oklch(0.25 0.015 60);color:oklch(0.95 0.012 80);font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px">1b</span>
+        <span style="font-size:15px;font-weight:600">Oxblood Menu</span>
+        <span style="font-size:14px;color:oklch(0.45 0.02 60)">Brass on burgundy · reads like a cocktail list</span>
+      </div>
+      <div style="position:relative;width:390px;height:844px;border-radius:40px;overflow:hidden;background:oklch(0.19 0.04 15);color:oklch(0.95 0.015 70);font-family:'DM Sans',sans-serif;box-shadow:0 40px 80px -30px rgba(50,10,15,.55)">
+        <div style="position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:60px 24px 32px;display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding-bottom:18px;border-bottom:1px solid oklch(0.34 0.05 15)">
+            <div style="font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:oklch(0.80 0.10 85);font-weight:700">Tonight's pour list</div>
+            <div style="font-family:'DM Serif Display',serif;font-size:44px;line-height:1">{{ ownerName }}'s Cabinet</div>
+            <div style="font-family:'DM Serif Display',serif;font-style:italic;font-size:17px;color:oklch(0.80 0.03 50)">{{ totalQtyIn }} capsules, {{ kindsIn }} cocktails</div>
+          </div>
+          <div style="display:flex;gap:20px;overflow-x:auto;margin:0 -24px;padding:0 24px;scrollbar-width:none;flex:none">
+            <sc-for list="{{ chipsB }}" as="c" hint-placeholder-count="5">
+              <button onClick="{{ c.onClick }}" style="background:none;border:none;padding:6px 0 8px;border-bottom:2px solid {{ c.bd }};color:{{ c.fg }};font-size:15px;font-weight:700;white-space:nowrap;flex:none;letter-spacing:.02em">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column">
+            <sc-for list="{{ itemsB }}" as="it" hint-placeholder-count="7">
+              <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px dashed oklch(0.36 0.05 15)">
+                <div style="width:58px;height:58px;border-radius:50%;background:oklch(0.92 0.025 75);overflow:hidden;flex:none"><img src="{{ it.img }}" alt="{{ it.name }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:4px;box-sizing:border-box"></div>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px">
+                  <span style="font-family:'DM Serif Display',serif;font-size:21px;line-height:1.05">{{ it.name }}</span>
+                  <span style="font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:700;color:{{ it.bColor }}">{{ it.spiritLabel }}{{ it.lowTag }}</span>
+                </div>
+                <div style="display:flex;flex-direction:column;align-items:flex-end;flex:none">
+                  <span style="font-family:'DM Serif Display',serif;font-size:30px;line-height:1;color:oklch(0.80 0.10 85)">{{ it.qty }}</span>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:oklch(0.80 0.03 50)">left</span>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="1c" style="display:flex;flex-direction:column;gap:14px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="background:oklch(0.25 0.015 60);color:oklch(0.95 0.012 80);font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px">1c</span>
+        <span style="font-size:15px;font-weight:600">Smoked Glass</span>
+        <span style="font-size:14px;color:oklch(0.45 0.02 60)">Copper on bottle green · inventory-forward</span>
+      </div>
+      <div style="position:relative;width:390px;height:844px;border-radius:40px;overflow:hidden;background:oklch(0.185 0.014 170);color:oklch(0.95 0.008 170);font-family:'DM Sans',sans-serif;box-shadow:0 40px 80px -30px rgba(10,30,25,.55)">
+        <div style="position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:none;padding:58px 20px 32px;display:flex;flex-direction:column;gap:20px">
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:oklch(0.74 0.11 52)">BAR / INVENTORY</div>
+            <div style="font-family:'Instrument Serif',serif;font-size:54px;line-height:.92">On the <em>shelf</em></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px">
+              <div style="padding:12px 14px;border-radius:14px;border:1px solid oklch(0.32 0.016 170);display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600">{{ totalQtyIn }}</span><span style="font-size:12px;color:oklch(0.76 0.015 170)">capsules</span></div>
+              <div style="padding:12px 14px;border-radius:14px;border:1px solid oklch(0.32 0.016 170);display:flex;flex-direction:column;gap:2px"><span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600">{{ kindsIn }}</span><span style="font-size:12px;color:oklch(0.76 0.015 170)">cocktails</span></div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+            <sc-for list="{{ chipsC }}" as="c" hint-placeholder-count="7">
+              <button onClick="{{ c.onClick }}" style="height:44px;border-radius:10px;background:{{ c.bg }};color:{{ c.fg }};border:1px solid {{ c.bd }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.04em">{{ c.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+            <sc-for list="{{ itemsC }}" as="it" hint-placeholder-count="6">
+              <div style="border-radius:18px;background:oklch(0.23 0.016 170);border:1px solid oklch(0.30 0.016 170);overflow:hidden;display:flex;flex-direction:column">
+                <div style="aspect-ratio:1.1;background:oklch(0.92 0.012 90);position:relative"><img src="{{ it.img }}" alt="{{ it.name }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply;padding:8px;box-sizing:border-box"></div>
+                <div style="padding:10px 12px 12px;display:flex;flex-direction:column;gap:6px">
+                  <span style="font-family:'Instrument Serif',serif;font-size:20px;line-height:1.05">{{ it.name }}</span>
+                  <div style="display:flex;justify-content:space-between;align-items:baseline">
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:oklch(0.76 0.015 170)">{{ it.spiritUpper }}</span>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:600;color:{{ it.cColor }}">{{ it.qtyPad }}</span>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;ownerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Sam&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Bar&quot;},&quot;houseCode&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;1234&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Bar&quot;},&quot;defaultView&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;grid&quot;,&quot;list&quot;],&quot;default&quot;:&quot;grid&quot;,&quot;tsType&quot;:&quot;'grid'|'list'&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;showEmpty&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;},&quot;skipLogin&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Behavior&quot;}}">
+const START={"old-fashioned-cocktails":6,"margarita-cocktails":4,"espresso-martini-capsules":2,"cosmopolitan-martini-cocktails":5,"whiskey-sour-cocktails":3,"manhattan-cocktails":1,"mai-tai-cocktails":4,"hurricane":2,"aviation-cocktails":3,"bees-knees":1,"spicy-margarita-cocktails":6,"vodka-martini-lemon-drop-cocktails":7,"long-island-iced-tea-cocktails":2,"rum-breeze-cocktails":0,"paper-plane-cocktails":3,"pineapple-margarita-capsules":0,"caramel-appletini":5};
+const LABEL={vodka:'Vodka',tequila:'Tequila',whiskey:'Whiskey',rum:'Rum',gin:'Gin',multi:'Mixed'};
+const FILTERS=['all','vodka','tequila','whiskey','rum','gin','multi'];
+const KEY='bt-bar-v1';
+const C={amber:'oklch(0.80 0.12 72)',ink:'oklch(0.20 0.02 60)',surf:'oklch(0.215 0.014 60)',line:'oklch(0.30 0.015 60)',text:'oklch(0.95 0.012 80)',muted:'oklch(0.74 0.02 70)',low:'oklch(0.74 0.13 40)',dimline:'oklch(0.40 0.015 60)'};
+const W=(u,w)=>u+(u.includes('?')?'&':'?')+'width='+w;
+
+function seedLog(owner){const n=Date.now(),m=60000,h=60*m;return [
+{who:'Jess',type:'take',id:'margarita-cocktails',n:1,t:n-38*m},
+{who:'Mike',type:'take',id:'old-fashioned-cocktails',n:1,t:n-95*m},
+{who:'Jess',type:'take',id:'spicy-margarita-cocktails',n:1,t:n-110*m},
+{who:owner,type:'restock',id:'vodka-martini-lemon-drop-cocktails',n:8,t:n-26*h},
+{who:'Priya',type:'take',id:'espresso-martini-capsules',n:1,t:n-28*h},
+{who:'Priya',type:'take',id:'manhattan-cocktails',n:1,t:n-29*h},
+{who:owner,type:'add',id:'caramel-appletini',n:8,t:n-74*h}];}
+
+class Component extends DCLogic {
+  state={screen:'login',role:'guest',loginTab:'guest',name:'',code:'',email:'',err:'',filter:'all',view:null,selId:null,catalog:[],stock:{},log:[],threshold:2,alt:false,sheet:false,lastId:null,q:'',fB:'all',fC:'all'};
+  owner(){return this.props.ownerName??'Sam';}
+  componentDidMount(){
+    fetch('capsules.json').then(r=>r.json()).then(catalog=>{
+      let s=null;try{s=JSON.parse(localStorage.getItem(KEY));}catch(e){}
+      const patch={catalog,stock:(s&&s.stock)||{...START},log:(s&&s.log)||seedLog(this.owner()),threshold:(s&&s.threshold)||2};
+      if(this.props.skipLogin){patch.screen='bar';patch.role='owner';}
+      this.setState(patch);
+    });
+  }
+  save(p){this.setState(p,()=>{try{localStorage.setItem(KEY,JSON.stringify({stock:this.state.stock,log:this.state.log,threshold:this.state.threshold}));}catch(e){}});}
+  who(){return this.state.role==='owner'?this.owner():(this.state.name.trim()||'Guest');}
+  setQty(id,q,logEntry){const stock={...this.state.stock,[id]:Math.max(0,q)};this.save(logEntry?{stock,log:[logEntry,...this.state.log]}:{stock});}
+  box(id,type){this.setQty(id,(this.state.stock[id]||0)+8,{who:this.owner(),type:type||'restock',id,n:8,t:Date.now()});}
+  take(){const id=this.state.selId,q=this.state.stock[id]||0;if(q<1)return;
+    this.save({stock:{...this.state.stock,[id]:q-1},log:[{who:this.who(),type:'take',id,n:1,t:Date.now()},...this.state.log],sheet:false,screen:'done',lastId:id});}
+  undo(){const id=this.state.lastId,[f,...rest]=this.state.log;
+    this.save({stock:{...this.state.stock,[id]:(this.state.stock[id]||0)+1},log:f&&f.id===id&&f.type==='take'?rest:this.state.log,screen:'bar'});}
+  fmtTime(t){const d=new Date(t),diff=Date.now()-t;if(diff<60*60000)return Math.max(1,Math.round(diff/60000))+'m ago';
+    const tm=d.toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});const day=this.dayKey(t);
+    return day==='Today'||day==='Yesterday'?tm:d.toLocaleDateString([],{weekday:'short'})+' · '+tm;}
+  dayKey(t){const a=new Date();a.setHours(0,0,0,0);if(t>=a.getTime())return 'Today';if(t>=a.getTime()-864e5)return 'Yesterday';return 'Earlier';}
+
+  renderVals(){
+    const s=this.state,th=s.threshold,isOwner=s.role==='owner',owner=this.owner();
+    const byId={};s.catalog.forEach(c=>byId[c.id]=c);
+    const mk=(c,q)=>{const out=q===0,low=q>0&&q<=th;return {id:c.id,name:c.name,spirit:c.spirit,spiritLabel:LABEL[c.spirit]||c.spirit,spiritUpper:(LABEL[c.spirit]||c.spirit).toUpperCase(),
+      img:W(c.img,360),img2:W(c.img2,600),imgBig:W(s.alt?c.img2:c.img,800),desc:c.desc,qty:q,out,low,canTake:!out,after:Math.max(0,q-1),
+      qtyText:out?'Out':'×'+q,qtyBg:out?C.dimline:low?C.low:C.amber,dim:out?0.5:1,
+      statusColor:out?C.muted:low?C.low:C.muted,statusText:out?'Out of stock':low?'Running low · '+q+' left':q+' in the bar',
+      statusShort:out?'Out':low?'Only '+q+' left':q+' left',gridSub:low?(LABEL[c.spirit]||'')+' · low':out?'Out':(LABEL[c.spirit]||''),
+      takeBd:out?C.line:C.amber,takeFg:out?C.muted:C.amber,
+      lowTag:low?' · running low':out?' · out':'',bColor:low?'oklch(0.75 0.13 30)':'oklch(0.80 0.03 50)',
+      qtyPad:String(q).padStart(2,'0'),cColor:low?'oklch(0.74 0.11 52)':'oklch(0.95 0.008 170)',
+      open:()=>this.setState({selId:c.id,screen:'detail',alt:false}),
+      quickTake:e=>{e.stopPropagation();this.setState({selId:c.id,sheet:true});},
+      inc:()=>this.setQty(c.id,q+1),dec:()=>this.setQty(c.id,q-1),box:()=>this.box(c.id)};};
+    const owned=Object.keys(s.stock).filter(id=>byId[id]).map(id=>mk(byId[id],s.stock[id]))
+      .sort((a,b)=>(a.out-b.out)||a.name.localeCompare(b.name));
+    const inStock=owned.filter(i=>!i.out);
+    const baseA=isOwner||this.props.showEmpty?owned:inStock;
+    const chips=(base,f,set,style)=>FILTERS.map(k=>{const n=base.filter(i=>k==='all'||i.spirit===k).length;return {k,n,label:k==='all'?'All':LABEL[k],count:n,active:f===k,onClick:()=>this.setState({[set]:k})};})
+      .filter(c=>c.k==='all'||c.n>0).map(style);
+    const chipsA=chips(baseA,s.filter,'filter',c=>({...c,fg:c.active?C.amber:C.muted,bd:c.active?C.amber:'transparent'}));
+    const chipsB=chips(inStock,s.fB,'fB',c=>({...c,fg:c.active?'oklch(0.80 0.10 85)':'oklch(0.80 0.03 50)',bd:c.active?'oklch(0.80 0.10 85)':'transparent'}));
+    const chipsC=chips(inStock,s.fC,'fC',c=>({...c,label:c.label.toUpperCase(),bg:c.active?'oklch(0.74 0.11 52)':'transparent',fg:c.active?'oklch(0.18 0.02 50)':'oklch(0.90 0.01 170)',bd:c.active?'oklch(0.74 0.11 52)':'oklch(0.32 0.016 170)'}));
+    const by=(base,f)=>base.filter(i=>f==='all'||i.spirit===f);
+    const itemsA=by(baseA,s.filter);
+    const view=s.view||this.props.defaultView||'grid';
+    const lowItems=owned.filter(i=>i.low||i.out).sort((a,b)=>a.qty-b.qty);
+    const selC=byId[s.selId];const sel=selC?mk(selC,s.stock[s.selId]||0):{};
+    const lastC=byId[s.lastId];const last=lastC?{...mk(lastC,s.stock[s.lastId]||0)}:{};
+    last.lowNow=!!(last.low||last.out);
+    const gm={};s.log.forEach(e=>{const c=byId[e.id];if(!c)return;const k=this.dayKey(e.t);(gm[k]=gm[k]||[]).push({
+      who:e.who,verb:e.type==='take'?'took a':e.type==='add'?'added':'restocked',name:c.name,time:this.fmtTime(e.t),img:W(c.img,160),
+      amt:e.type==='take'?'−1':'+'+e.n,amtColor:e.type==='take'?C.muted:C.amber});});
+    const groups=['Today','Yesterday','Earlier'].filter(k=>gm[k]).map(k=>({label:k,rows:gm[k]}));
+    const ql=s.q.trim().toLowerCase();
+    const addRows=s.catalog.filter(c=>!ql||c.name.toLowerCase().includes(ql)||(LABEL[c.spirit]||'').toLowerCase().includes(ql)).map(c=>{const have=s.stock[c.id];const owns=have!=null;
+      return {name:c.name,spiritLabel:LABEL[c.spirit]||c.spirit,img:W(c.img,160),have:owns?have+' on shelf':'Not in bar',btnBg:owns?'transparent':C.amber,btnFg:owns?C.amber:C.ink,add:()=>this.box(c.id,owns?'restock':'add')};});
+    const go=sc=>()=>this.setState({screen:sc,sheet:false});
+    const navDef=[['Bar','bar'],['Activity','activity']].concat(isOwner?[['Manage','manage']]:[]);
+    const nav=navDef.map(([l,k])=>({label:l,onClick:go(k),color:s.screen===k?C.amber:C.muted,dot:s.screen===k?C.amber:'transparent'}));
+    const userName=isOwner?owner:(s.name.trim()||'friend');
+    const hr=new Date().getHours();
+    const pv=['old-fashioned-cocktails','margarita-cocktails','espresso-martini-capsules'].map(id=>byId[id]).filter(Boolean).map(c=>({name:c.name,img:W(c.img,240)}));
+    const tab=(k,l)=>({label:l,onClick:()=>this.setState({loginTab:k,err:''}),bg:s.loginTab===k?C.amber:'transparent',fg:s.loginTab===k?C.ink:C.text});
+    const imgTab=(alt,l)=>({label:l,onClick:()=>this.setState({alt}),bg:s.alt===alt?C.amber:'transparent',fg:s.alt===alt?C.ink:C.text});
+    return {
+      barName:this.props.barName??'The Home Bar',ownerName:owner,
+      isLogin:s.screen==='login',isBar:s.screen==='bar',isDetail:s.screen==='detail',isDone:s.screen==='done',isActivity:s.screen==='activity',isManage:s.screen==='manage',isAdd:s.screen==='add',
+      showNav:['bar','activity','manage'].includes(s.screen),isOwner,
+      loginPreview:pv,loginTabs:[tab('guest','Guest'),tab('owner','Owner')],isGuestTab:s.loginTab==='guest',isOwnerTab:s.loginTab==='owner',
+      name:s.name,code:s.code,email:s.email,err:s.err,hasErr:!!s.err,
+      onName:e=>this.setState({name:e.target.value,err:''}),onCode:e=>this.setState({code:e.target.value.replace(/\D/g,''),err:''}),onEmail:e=>this.setState({email:e.target.value}),
+      enterGuest:()=>{if(!s.name.trim())return this.setState({err:'Tell us your name first'});if(s.code!==(this.props.houseCode??'1234'))return this.setState({err:"That code isn't right"});this.setState({role:'guest',screen:'bar',filter:'all'});},
+      enterOwner:()=>this.setState({role:'owner',screen:'bar',filter:'all'}),
+      logout:()=>this.setState({screen:'login',role:'guest',code:'',sheet:false}),
+      greeting:hr<12?'Good morning':hr<17?'Good afternoon':'Good evening',userName,initial:userName.charAt(0).toUpperCase(),
+      totalQty:baseA.reduce((a,i)=>a+i.qty,0),kinds:baseA.filter(i=>!i.out).length,kindsAll:owned.length,
+      totalQtyIn:inStock.reduce((a,i)=>a+i.qty,0),kindsIn:inStock.length,
+      showLowBanner:isOwner&&lowItems.length>0,lowCount:lowItems.length,lowNames:lowItems.slice(0,3).map(i=>i.name).join(', ')+(lowItems.length>3?'…':''),
+      hasLow:lowItems.length>0,lowItems,shelf:owned,
+      chipsA,chipsB,chipsC,itemsA,itemsB:by(inStock,s.fB),itemsC:by(inStock,s.fC),noItems:itemsA.length===0&&s.catalog.length>0,
+      filterTitle:s.filter==='all'?(isOwner?'Whole shelf':'Everything in stock'):LABEL[s.filter]+' cocktails',
+      isGrid:view==='grid',isList:view==='list',setGrid:()=>this.setState({view:'grid'}),setList:()=>this.setState({view:'list'}),
+      gridBtnBg:view==='grid'?C.line:'transparent',listBtnBg:view==='list'?C.line:'transparent',gridIcon:view==='grid'?C.amber:C.muted,listIcon:view==='list'?C.amber:C.muted,
+      sel,last,imgTabs:[imgTab(false,'Box'),imgTab(true,'Pour')],
+      openSheet:()=>this.setState({sheet:true}),closeSheet:()=>this.setState({sheet:false}),stop:e=>e.stopPropagation(),
+      take:()=>this.take(),undo:()=>this.undo(),sheet:s.sheet,
+      goBar:go('bar'),goManage:go('manage'),goAdd:()=>this.setState({screen:'add',q:''}),
+      groups,threshold:th,thInc:()=>this.save({threshold:Math.min(8,th+1)}),thDec:()=>this.save({threshold:Math.max(1,th-1)}),
+      q:s.q,onQ:e=>this.setState({q:e.target.value}),addRows,nav
+    };
+  }
+}
+</script>
+</body>
+</html>

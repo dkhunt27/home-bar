@@ -1,0 +1,134 @@
+/* Design tokens: direction 1a "Speakeasy", amber on smoked oak (design/README.md). Hex values
+   are the README's conversions of the prototype's oklch. */
+:root {
+  --bg: #130e0a;
+  --surface: #1e1813;
+  --border: #342c26;
+  --divider: #29231d;
+  --stepper-border: #433b35;
+  --sheet-border: #39312b;
+  --grabber: #48403a;
+  --text: #f3eee6;
+  --text-soft: #c5bcb2;
+  --muted: #b3a99e;
+  --placeholder: #8f857b;
+  --amber: #edb161;
+  --amber-ink: #1d140d;
+  --low: #f08d6a;
+  --low-bg: #321b13;
+  --low-border: #7f422d;
+  --low-soft: #e4c7b7;
+  --out-pill: #4e4640;
+  --tile: #eee7db;
+  --box-btn: #382b1d;
+  --scrim: rgba(8, 5, 2, 0.62);
+
+  --font-display: "Cormorant Garamond", "Iowan Old Style", Georgia, serif;
+  --font-ui: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --app-max-width: 480px;
+  --gutter: 20px;
+  --nav-height: 72px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  /* The design's 56px top padding allows for a phone's status bar. In a browser tab it's
+     just 56px; installed full-screen (black-translucent status bar) it grows to clear the
+     notch. */
+  --screen-top: max(56px, calc(var(--safe-top) + 12px));
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+body {
+  color: var(--text);
+  font-family: var(--font-ui);
+  /* Cormorant's default old-style figures make a "1" read as an "I". */
+  font-variant-numeric: lining-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
+  text-size-adjust: 100%;
+  overscroll-behavior-y: none;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+h1,
+h2,
+p {
+  margin: 0;
+  font: inherit;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  /* No double-tap zoom on steppers and pills. */
+  touch-action: manipulation;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  display: block;
+}
+
+input::placeholder {
+  color: var(--placeholder);
+}
+
+* {
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* The phone-width column every screen renders into; wider screens just center it. */
+.app-column {
+  position: relative;
+  max-width: var(--app-max-width);
+  min-height: 100dvh;
+  margin: 0 auto;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

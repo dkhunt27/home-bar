@@ -1,0 +1,9 @@
+/* Dark on light even in this dark theme: plenty of camera apps can't read an inverted code. */
+.code {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  background: var(--tile);
+  fill: var(--amber-ink);
+}

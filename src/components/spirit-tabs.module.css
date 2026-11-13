@@ -1,0 +1,28 @@
+.tabs {
+  display: flex;
+  /* Without flex: none the row collapses inside the screen's column. */
+  flex: none;
+  gap: 20px;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 0 var(--gutter);
+  overflow-x: auto;
+}
+
+.tab {
+  flex: none;
+  min-height: 44px;
+  padding: 6px 0 8px;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+
+.active {
+  border-bottom-color: var(--amber);
+  color: var(--amber);
+}

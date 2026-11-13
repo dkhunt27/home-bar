@@ -1,0 +1,19 @@
+.header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  /* The design pins this screen's top 4px higher than the tab screens. */
+  margin-top: -4px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 34px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}

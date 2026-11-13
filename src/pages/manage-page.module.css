@@ -1,0 +1,90 @@
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.addButton {
+  display: grid;
+  flex: none;
+  place-items: center;
+  height: 42px;
+  padding: 0 16px;
+  border-radius: 999px;
+  background: var(--amber);
+  color: var(--amber-ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.alertCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.alertText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.alertTitle {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Like the Bar banner's "Restock →". */
+.cardAction {
+  flex: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--amber);
+}
+
+.thresholdValue {
+  min-width: 22px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+.shelfLink {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.shelfQty {
+  min-width: 24px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+/* After the base rules above, so it wins over their muted color. */
+.low {
+  color: var(--low);
+}

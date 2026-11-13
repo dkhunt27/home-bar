@@ -1,0 +1,109 @@
+.page {
+  /* Room for the sticky footer. */
+  padding-bottom: calc(120px + var(--safe-bottom));
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(52px, calc(var(--safe-top) + 8px)) var(--gutter) 14px;
+}
+
+.hero {
+  margin: 0 var(--gutter);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px var(--gutter) 0;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: 42px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.status {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.description {
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--text-soft);
+  text-wrap: pretty;
+}
+
+/* Owner only. */
+.shelfCard {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--surface);
+}
+
+.shelfLabel {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.shelfQty {
+  min-width: 28px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.boxButton {
+  flex: none;
+  height: 40px;
+  padding: 0 12px;
+  border: none;
+  border-radius: 999px;
+  background: var(--box-btn);
+  color: var(--amber);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  z-index: 10;
+  width: 100%;
+  max-width: var(--app-max-width);
+  padding: 14px var(--gutter) calc(30px + var(--safe-bottom));
+  transform: translateX(-50%);
+  border-top: 1px solid var(--divider);
+  background: var(--bg);
+}
+
+.outBlock {
+  display: grid;
+  place-items: center;
+  height: 58px;
+  border-radius: 18px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* After the base rules above, so it wins over their muted color. */
+.low {
+  color: var(--low);
+}

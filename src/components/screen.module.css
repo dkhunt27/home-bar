@@ -1,0 +1,10 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  padding: var(--screen-top) var(--gutter) calc(28px + var(--safe-bottom));
+}
+
+.withNav {
+  padding-bottom: calc(28px + var(--nav-height) + var(--safe-bottom));
+}

@@ -1,0 +1,43 @@
+name: Deploy Production
+
+# Deploys on every push to `main`: lint + unit tests must pass, then `npm run build:prod`
+# (Supabase values from wrangler.jsonc `vars`) and `wrangler deploy`. Worker secrets
+# (SUPABASE_SERVICE_ROLE_KEY, MAILEROO_API_KEY) live in Cloudflare and survive deploys.
+# Migrations are applied by hand (`npm run push:prod`), never from here.
+#
+# Needs: repo secret CLOUDFLARE_API_TOKEN (Account → Workers Scripts: Edit) and repo variable
+# CLOUDFLARE_ACCOUNT_ID.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+# Queue deploys rather than cancel one halfway through.
+concurrency:
+  group: prod-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          # Same file `n` reads locally, so CI and dev machines can't drift apart.
+          node-version-file: .node-version
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Unit tests
+        run: npm test
+      - name: Build
+        run: npm run build:prod
+      - name: Deploy
+        run: npx wrangler deploy
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}

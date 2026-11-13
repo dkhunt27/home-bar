@@ -1,0 +1,48 @@
+.option {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.option.active {
+  background: var(--amber);
+  color: var(--amber-ink);
+}
+
+.group {
+  min-inline-size: 0;
+  margin: 0;
+  border: none;
+  background: var(--surface);
+}
+
+.block {
+  composes: group;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 14px;
+}
+
+.block .option {
+  height: 40px;
+  border-radius: 11px;
+  font-size: 14px;
+}
+
+.pill {
+  composes: group;
+  display: flex;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+}
+
+.pill .option {
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  font-size: 13px;
+}

@@ -1,0 +1,43 @@
+.toast {
+  position: fixed;
+  /* Just above the tab bar. */
+  bottom: calc(var(--nav-height) + var(--safe-bottom) + 10px);
+  left: 50%;
+  z-index: 40;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: calc(100% - 2 * var(--gutter));
+  max-width: calc(var(--app-max-width) - 2 * var(--gutter));
+  padding: 8px 8px 8px 16px;
+  transform: translateX(-50%);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 16px 32px -12px rgba(0, 0, 0, 0.6);
+}
+
+.message {
+  flex: 1;
+  font-size: 14px;
+}
+
+.later,
+.reload {
+  height: 40px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.later {
+  background: none;
+  color: var(--muted);
+}
+
+.reload {
+  background: var(--amber);
+  color: var(--amber-ink);
+}

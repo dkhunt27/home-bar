@@ -1,0 +1,49 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  min-height: 100dvh;
+  padding: max(40px, calc(var(--safe-top) + 12px)) 28px calc(40px + var(--safe-bottom));
+  text-align: center;
+}
+
+.title {
+  margin-top: 10px;
+  font-family: var(--font-display);
+  font-size: 50px;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.sub {
+  font-size: 16px;
+  color: var(--text-soft);
+}
+
+.lowPill {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--low-bg);
+  color: var(--low-soft);
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 24px;
+}
+
+.undo {
+  height: 48px;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 600;
+}

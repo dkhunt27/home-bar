@@ -1,0 +1,72 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  min-height: 100dvh;
+  padding: max(72px, calc(var(--safe-top) + 28px)) 28px calc(36px + var(--safe-bottom));
+}
+
+.eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--amber);
+}
+
+.headline {
+  font-family: var(--font-display);
+  font-size: 54px;
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.01em;
+}
+
+.headline em {
+  color: var(--amber);
+}
+
+.preview {
+  display: flex;
+  gap: 10px;
+}
+
+/* 104px in the 390px reference; shrinks to fit on narrower phones. */
+.previewTile {
+  width: min(104px, calc((100% - 20px) / 3));
+}
+
+.formBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: auto;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Stands in for the guest form on a visit without the guest link. */
+.noLink {
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  text-align: center;
+  font-size: 15px;
+  line-height: 1.4;
+  color: var(--text-soft);
+}
+
+.submit {
+  margin-top: 4px;
+}
+
+.hint {
+  text-align: center;
+  font-size: 13px;
+  color: var(--muted);
+}

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><title>Home Bar</title><rect width="512" height="512" rx="112" fill="#130e0a"/>
+  <path d="M152 204 H360 C350 252 308 276 256 276 C204 276 162 252 152 204 Z" fill="#edb161" opacity=".32"/>
+  <g fill="none" stroke="#edb161" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M136 180 H376 C376 250 324 292 256 292 C188 292 136 250 136 180 Z"/>
+    <path d="M256 292 V388"/>
+    <path d="M196 392 H316"/>
+  </g></svg>
