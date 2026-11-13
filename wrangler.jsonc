@@ -37,7 +37,7 @@
     "ALERT_FROM_EMAIL": "",
     // The deployed site, e.g. https://home-bar.<you>.workers.dev. Only the cron needs it, for
     // the "Restock in the app" link (the notify route uses its own request's origin).
-    "APP_URL": ""
+    "APP_URL": "https://home-bar.home-bar.workers.dev"
   },
   "compatibility_flags": ["nodejs_compat"]
 }

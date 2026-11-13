@@ -77,7 +77,7 @@ export default function BarPage() {
       <header className={styles.header}>
         <AvatarMenu />
         <p className={styles.eyebrow}>Tonight's pour list</p>
-        <h1 className={styles.title}>{settings?.owner_name}'s Cabinet</h1>
+        <h1 className={styles.title}>{settings?.bar_name}</h1>
         <p className={styles.totals}>
           {plural(totals.capsules, "capsule")}, {plural(totals.cocktails, "cocktail")}
         </p>
