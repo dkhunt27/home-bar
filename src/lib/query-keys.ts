@@ -11,6 +11,8 @@ export const QK = {
   activity: () => ["activity"] as const,
   /** Owner only: the guest link's key. */
   joinKey: () => ["join-key"] as const,
+  /** The signed-in user's passkeys (Face ID sign-in). */
+  passkeys: () => ["passkeys"] as const,
 } as const;
 
 /** Mutation keys, so realtime refreshes can hold off while one is in flight. */

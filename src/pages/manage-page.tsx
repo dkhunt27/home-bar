@@ -7,22 +7,26 @@ import { Loading } from "../components/loading";
 import { Screen } from "../components/screen";
 import { Stepper } from "../components/stepper";
 import ui from "../components/ui.module.css";
-import { useBoxes, useShelf } from "../hooks/use-bar-data";
-import { useAdjustStock, useSetLowThreshold } from "../hooks/use-bar-mutations";
+import { useBoxes, usePasskeys, useShelf } from "../hooks/use-bar-data";
+import { useAdjustStock, useRegisterPasskey, useSetLowThreshold } from "../hooks/use-bar-mutations";
 import { useNow } from "../hooks/use-now";
 import {
   BOX_SIZE,
   LOW_THRESHOLD_MAX,
   LOW_THRESHOLD_MIN,
   lowItems,
+  plural,
   SPIRIT_LABELS,
   statusShort,
 } from "../lib/bar";
 import { cx } from "../lib/cx";
 import { expirySummary, hasPastBestBy } from "../lib/expiry";
 import { IMAGE_WIDTH, sizedImage } from "../lib/images";
+import { passkeyErrorMessage, passkeyName, passkeysSupported } from "../lib/sign-in";
 import { capsuleRoute, collectionsForRoute, ROUTES } from "../routes";
 import styles from "./manage-page.module.css";
+
+const PASSKEY_NAME = passkeyName(navigator.userAgent);
 
 export default function ManagePage() {
   const { shelf, threshold, isPending, error } = useShelf();
@@ -31,11 +35,24 @@ export default function ManagePage() {
   const setThreshold = useSetLowThreshold();
   const adjust = useAdjustStock();
   const [adding, setAdding] = useState<AddBoxTarget | null>(null);
+  const passkeys = usePasskeys();
+  const addPasskey = useRegisterPasskey();
+  const [passkeyError, setPasskeyError] = useState<string | null>(null);
 
   if (error) return <LoadError error={error} />;
   if (isPending) return <Loading />;
 
   const low = lowItems(shelf);
+  const passkeyCount = passkeys.data?.length ?? 0;
+  let passkeyStatus = "Sign in without waiting for an email";
+  if (passkeyError) passkeyStatus = passkeyError;
+  else if (addPasskey.isSuccess) passkeyStatus = "Saved. Use it next time you sign in";
+  else if (passkeyCount > 0) passkeyStatus = `On · ${plural(passkeyCount, "passkey")} saved`;
+
+  const savePasskey = () => {
+    setPasskeyError(null);
+    addPasskey.mutate(undefined, { onError: (err) => setPasskeyError(passkeyErrorMessage(err)) });
+  };
 
   return (
     <Screen gap={22} withNav>
@@ -73,6 +90,23 @@ export default function ManagePage() {
         </span>
         <span className={styles.cardAction}>Show →</span>
       </Link>
+
+      {passkeysSupported() && (
+        <button
+          type="button"
+          className={cx(styles.alertCard, styles.cardButton)}
+          onClick={savePasskey}
+          disabled={addPasskey.isPending}
+        >
+          <span className={styles.alertText}>
+            <span className={styles.alertTitle}>
+              {PASSKEY_NAME === "Face ID" ? "Face ID sign-in" : "Passkey sign-in"}
+            </span>
+            <span className={cx(ui.rowMeta, passkeyError && styles.low)}>{passkeyStatus}</span>
+          </span>
+          <span className={styles.cardAction}>{passkeyCount > 0 ? "Add →" : "Set up →"}</span>
+        </button>
+      )}
 
       {/* Best-by dates are a side line here: if they fail to load, the card just says less. */}
       <Link to={ROUTES.MANAGE_EXPIRING} className={styles.alertCard}>

@@ -90,6 +90,16 @@
   place-items: center;
 }
 
+/* .alertCard on a button (Face ID sign-in) rather than a link. */
+.cardButton {
+  width: 100%;
+  text-align: left;
+}
+
+.cardButton:disabled {
+  opacity: 0.7;
+}
+
 /* After the base rules above, so it wins over their muted color. */
 .low {
   color: var(--low);

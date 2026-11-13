@@ -4,6 +4,7 @@ import { buildShelf, type ShelfItem, stockStatus } from "../lib/bar";
 import { getRecentActivity } from "../lib/db/activity-db";
 import { getBoxes } from "../lib/db/boxes-db";
 import { getCapsules, getCollections } from "../lib/db/capsules-db";
+import { listPasskeys } from "../lib/db/passkeys-db";
 import { getJoinKey, getSettings } from "../lib/db/settings-db";
 import { getStock } from "../lib/db/stock-db";
 import { QK } from "../lib/query-keys";
@@ -86,4 +87,9 @@ export function useShelfItem(capsuleId: string | undefined) {
     return { item, inBar: false };
   }, [shelf, catalog, capsuleId, threshold]);
   return { ...data, found };
+}
+
+/** Owner only in practice: Manage shows whether Face ID sign-in is set up. */
+export function usePasskeys() {
+  return useQuery({ queryKey: QK.passkeys(), queryFn: listPasskeys });
 }

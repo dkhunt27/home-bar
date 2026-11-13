@@ -49,8 +49,15 @@ each component/page) plus shared atoms in `src/components/ui.module.css`.
   Guests: `signInAnonymously()` then `join_bar(name, key)`, the key coming from the guest
   link's `#k=` fragment (`joinKeyFromHash` in `bar.ts`); the owner shows its QR code on Manage
   → Guest link. The owner is whoever's confirmed email equals `settings_private.owner_email`.
-  Magic links only go to existing users (`shouldCreateUser: false`), so the owner's auth user
-  must exist first (`seed.sql` creates it locally). A non-owner magic link is signed straight out.
+  The owner signs in with an emailed code (`verifyOtp`) or a passkey (Face ID) saved on Manage.
+  The email also has a link, for a computer: an iPhone opens links in the browser, never the
+  home-screen app. Codes only go to existing users (`shouldCreateUser: false`), so the owner's
+  auth user must exist first (`seed.sql` creates it locally). A non-owner is signed straight out.
+  Passkeys are tied to the domain, so test them at `localhost:5174`, not `127.0.0.1`.
+- **Hosted auth settings** live in the dashboard, not `config.toml` (`config push` would also
+  push its localhost URLs): the Magic Link email template must contain `{{ .Token }}`
+  (`supabase/templates/magic-link.html` is the reference), and passkeys need to be on with RP ID
+  `pour-decisions.hunt27.com` and origin `https://pour-decisions.hunt27.com`.
 - **Data layer**: components call `src/lib/db/*-db.ts`, wrapped in TanStack Query with keys
   from `QK` (`src/lib/query-keys.ts`). Shared queries and mutations are in
   `src/hooks/use-bar-data.ts` and `use-bar-mutations.ts`. Pure rules (sort, visibility, tabs,

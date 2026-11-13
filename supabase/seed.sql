@@ -1,6 +1,6 @@
 -- =============================================================================
 -- Local dev seed (runs on every `supabase db reset`; never on a remote project).
---   Owner:  owner@homebar.dev, by magic link. The email lands in Mailpit,
+--   Owner:  owner@homebar.dev, by the emailed code (or link). The email lands in Mailpit,
 --           http://127.0.0.1:55324
 --   Guests: http://localhost:5174/sign-in#k=local-guest-key, then any name
 -- Stock and activity mirror the design prototype's START / seedLog, so the app looks like

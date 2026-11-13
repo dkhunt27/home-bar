@@ -22,14 +22,19 @@ interface AuthContextType {
   isOwner: boolean;
   /** True until we know whether there's a session and, if so, who it is. */
   loading: boolean;
-  /** Set when a magic link signed in someone who isn't the owner; the sign-in screen shows it. */
+  /** Set when an owner sign-in turned out to be someone else; the sign-in screen shows it. */
   authError: string | null;
   clearAuthError: () => void;
   /** Guest entry: anonymous session (reused if there is one) + the guest link's key. */
   joinAsGuest: (name: string, key: string) => Promise<JoinBarStatusType>;
-  /** Owner entry: emails a magic link that lands back on the app root. Only to an existing
-   *  user, so the form can't be used to mail strangers. */
-  sendOwnerLink: (email: string) => Promise<void>;
+  /** Owner entry, step 1: emails a code (plus a link back to the app root, for a computer).
+   *  Only to an existing user, so the form can't be used to mail strangers. */
+  sendOwnerCode: (email: string) => Promise<void>;
+  /** Owner entry, step 2: the emailed code. Signs in inside the home-screen app, which an
+   *  email link can't reach on an iPhone. */
+  verifyOwnerCode: (email: string, code: string) => Promise<void>;
+  /** Owner entry with a passkey saved on Manage (Face ID on an iPhone). */
+  signInWithPasskey: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -69,8 +74,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const me = userId ? (meQuery.data ?? null) : null;
   const loading = sessionLoading || (!!userId && meQuery.isPending);
 
-  // A magic link makes you the owner only if it went to the owner's address. Anyone else
-  // gets signed straight back out, with a reason.
+  // An emailed code or link makes you the owner only if it went to the owner's address.
+  // Anyone else gets signed straight back out, with a reason.
   useEffect(() => {
     if (session && !session.user.is_anonymous && meQuery.isSuccess && meQuery.data === null) {
       setAuthError("That email isn't set up as this bar's owner.");
@@ -102,7 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     [queryClient],
   );
 
-  const sendOwnerLink = useCallback(async (email: string) => {
+  const sendOwnerCode = useCallback(async (email: string) => {
     setAuthError(null);
     // shouldCreateUser: false, or any address typed here would get a new user and an email.
     // An unknown address fails with otp_disabled instead (sign-in-page.tsx says so).
@@ -110,6 +115,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       email,
       options: { emailRedirectTo: window.location.origin, shouldCreateUser: false },
     });
+    if (error) throw error;
+  }, []);
+
+  const verifyOwnerCode = useCallback(async (email: string, code: string) => {
+    setAuthError(null);
+    const { error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
+    if (error) throw error;
+  }, []);
+
+  const signInWithPasskey = useCallback(async () => {
+    setAuthError(null);
+    const { error } = await supabase.auth.signInWithPasskey();
     if (error) throw error;
   }, []);
 
@@ -127,10 +144,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authError,
       clearAuthError,
       joinAsGuest,
-      sendOwnerLink,
+      sendOwnerCode,
+      verifyOwnerCode,
+      signInWithPasskey,
       signOut,
     }),
-    [session, me, loading, authError, clearAuthError, joinAsGuest, sendOwnerLink, signOut],
+    [
+      session,
+      me,
+      loading,
+      authError,
+      clearAuthError,
+      joinAsGuest,
+      sendOwnerCode,
+      verifyOwnerCode,
+      signInWithPasskey,
+      signOut,
+    ],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

@@ -1,6 +1,7 @@
 import { type QueryClient, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BOX_SIZE } from "../lib/bar";
 import { setBoxExpiry } from "../lib/db/boxes-db";
+import { registerPasskey } from "../lib/db/passkeys-db";
 import { rotateJoinKey, updateLowThreshold } from "../lib/db/settings-db";
 import { addBox, addCollectionBox, adjustStock, takeCapsule, undoTake } from "../lib/db/stock-db";
 import { notifyLowStock } from "../lib/low-stock-api";
@@ -174,5 +175,14 @@ export function useRotateJoinKey() {
   return useMutation({
     mutationFn: rotateJoinKey,
     onSuccess: (key) => queryClient.setQueryData(QK.joinKey(), key),
+  });
+}
+
+/** Saves a passkey for Face ID sign-in. Not optimistic: the phone's sheet can be cancelled. */
+export function useRegisterPasskey() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: registerPasskey,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: QK.passkeys() }),
   });
 }

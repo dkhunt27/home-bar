@@ -190,15 +190,16 @@ minimum_password_length = 6
 # are: `letters_digits`, `lower_upper_letters_digits`, `lower_upper_letters_digits_symbols`
 password_requirements = ""
 
-# Configure passkey sign-ins.
-# [auth.passkey]
-# enabled = false
+# Owner sign-in with Face ID (or any passkey). The hosted project uses rp_id
+# pour-decisions.hunt27.com, so a passkey saved locally only works locally, and vice versa.
+[auth.passkey]
+enabled = true
 
-# Configure WebAuthn relying party settings (required when passkey is enabled).
-# [auth.webauthn]
-# rp_display_name = "Supabase"
-# rp_id = "localhost"
-# rp_origins = ["http://127.0.0.1:3000"]
+# WebAuthn won't take an IP address as the relying party, so sign in at localhost, not 127.0.0.1.
+[auth.webauthn]
+rp_display_name = "Home Bar"
+rp_id = "localhost"
+rp_origins = ["http://localhost:5174"]
 
 [auth.rate_limit]
 # Number of emails that can be sent per hour. Requires auth.email.smtp to be enabled.
@@ -254,6 +255,13 @@ otp_expiry = 3600
 # [auth.email.template.invite]
 # subject = "You have been invited"
 # content_path = "./supabase/templates/invite.html"
+
+# The owner's sign-in email carries a code as well as the link: an iPhone opens the link in the
+# browser, never the home-screen app, so the app signs in with the code. The hosted project's
+# template is set in the dashboard; this file is the reference for it.
+[auth.email.template.magic_link]
+subject = "Your Home Bar sign-in code"
+content_path = "./supabase/templates/magic-link.html"
 
 # Uncomment to customize notification email template
 # [auth.email.notification.password_changed]
