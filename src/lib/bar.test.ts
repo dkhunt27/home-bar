@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import type { CapsuleDbType, SpiritType, StockDbType } from "../types";
 import {
   buildShelf,
+  catalogRows,
+  catalogTabs,
   filterBySpirit,
   filterTitle,
   gridCaption,
@@ -14,6 +16,7 @@ import {
   plural,
   qtyPillText,
   type ShelfItem,
+  searchShelf,
   shelfTotals,
   spiritTabs,
   statusLong,
@@ -148,6 +151,50 @@ describe("filters", () => {
     expect(filterTitle("all", true)).toBe("Whole shelf");
     expect(filterTitle("whiskey", false)).toBe("Whiskey cocktails");
     expect(filterTitle("multi", true)).toBe("Mixed cocktails");
+  });
+});
+
+describe("search", () => {
+  const shelf = buildShelf(CATALOG, STOCK, 2);
+
+  it("matches the name or the spirit, ignoring case and stray spaces", () => {
+    expect(names(searchShelf(shelf, " MARG "))).toEqual(["Margarita", "Pineapple Margarita"]);
+    expect(names(searchShelf(shelf, "whiskey"))).toEqual(["Manhattan", "Old Fashioned"]);
+  });
+
+  it("leaves the shelf alone for an empty query", () => {
+    expect(searchShelf(shelf, "  ")).toBe(shelf);
+  });
+});
+
+describe("catalog (Add a capsule)", () => {
+  const catalogNames = (capsules: CapsuleDbType[]) => capsules.map((c) => c.name);
+
+  it("lists the whole catalog A–Z without reordering the cached array", () => {
+    const before = [...CATALOG];
+    expect(catalogNames(catalogRows(CATALOG, "all", ""))).toEqual([
+      "Aviation",
+      "Lemon Drop",
+      "Manhattan",
+      "Margarita",
+      "Old Fashioned",
+      "Pineapple Margarita",
+      "Rum Breeze",
+    ]);
+    expect(CATALOG).toEqual(before);
+  });
+
+  it("narrows by spirit tab and search together", () => {
+    expect(catalogNames(catalogRows(CATALOG, "tequila", ""))).toEqual([
+      "Margarita",
+      "Pineapple Margarita",
+    ]);
+    expect(catalogNames(catalogRows(CATALOG, "tequila", "pine"))).toEqual(["Pineapple Margarita"]);
+    expect(catalogRows(CATALOG, "whiskey", "marg")).toEqual([]);
+  });
+
+  it("offers a tab for each spirit in the catalog, in tab order", () => {
+    expect(catalogTabs(CATALOG)).toEqual(["all", "vodka", "tequila", "whiskey", "rum", "gin"]);
   });
 });
 

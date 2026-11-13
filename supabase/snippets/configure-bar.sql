@@ -12,3 +12,12 @@ SET owner_name = 'Sam',          -- "ask Sam to restock", and you in the activit
     bar_name = 'The Home Bar',   -- Bar screen title, sign-in eyebrow, guest link, emails
     low_threshold = 2            -- also editable on the Manage screen
 WHERE id = 1;
+
+
+-- 'Ctrl + Alt + Drink'
+-- 'The Pod & Pour'
+-- 'The Last Pour'
+-- 'Pour Decisions'
+-- 'Sip Happens'
+-- 'The Lazy Bartender'
+-- 

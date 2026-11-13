@@ -4,10 +4,11 @@ import { CapsuleTile } from "../components/capsule-tile";
 import { LoadError } from "../components/load-error";
 import { Loading } from "../components/loading";
 import { Screen } from "../components/screen";
+import { SpiritTabs } from "../components/spirit-tabs";
 import ui from "../components/ui.module.css";
 import { useCapsules, useStock } from "../hooks/use-bar-data";
 import { useAddBox } from "../hooks/use-bar-mutations";
-import { BOX_SIZE, SPIRIT_LABELS } from "../lib/bar";
+import { BOX_SIZE, catalogRows, catalogTabs, SPIRIT_LABELS, type SpiritFilter } from "../lib/bar";
 import { IMAGE_WIDTH, sizedImage } from "../lib/images";
 import { ROUTES } from "../routes";
 import styles from "./add-capsule-page.module.css";
@@ -17,17 +18,14 @@ export default function AddCapsulePage() {
   const stock = useStock();
   const addBox = useAddBox();
   const [query, setQuery] = useState("");
+  const [filter, setFilter] = useState<SpiritFilter>("all");
 
   const error = capsules.error ?? stock.error;
   if (error) return <LoadError error={error} />;
   if (!capsules.data || !stock.data) return <Loading />;
 
   const onShelf = new Map(stock.data.map((s) => [s.capsule_id, s.qty]));
-  const q = query.trim().toLowerCase();
-  const rows = capsules.data.filter(
-    (c) =>
-      !q || c.name.toLowerCase().includes(q) || SPIRIT_LABELS[c.spirit].toLowerCase().includes(q),
-  );
+  const rows = catalogRows(capsules.data, filter, query);
 
   return (
     <Screen gap={16}>
@@ -46,8 +44,14 @@ export default function AddCapsulePage() {
         enterKeyHint="search"
       />
 
+      <SpiritTabs tabs={catalogTabs(capsules.data)} value={filter} onChange={setFilter} />
+
       <div className={styles.list}>
-        {rows.length === 0 && <p className={ui.emptyState}>No capsules match "{query}".</p>}
+        {rows.length === 0 && (
+          <p className={ui.emptyState}>
+            No {filter === "all" ? "" : `${SPIRIT_LABELS[filter]} `}capsules match "{query}".
+          </p>
+        )}
         {rows.map((capsule) => {
           const have = onShelf.get(capsule.id);
           const inBar = have !== undefined;

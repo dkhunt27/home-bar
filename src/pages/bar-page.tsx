@@ -24,6 +24,7 @@ import {
   type ShelfItem,
   SPIRIT_LABELS,
   type SpiritFilter,
+  searchShelf,
   shelfTotals,
   spiritTabs,
   statusShort,
@@ -48,19 +49,26 @@ export default function BarPage() {
 
   const base = visibleShelf(shelf, isOwner, settings);
   const tabs = spiritTabs(base);
-  // The filter lives in the URL so Back from a capsule returns to it. If its last capsule
-  // just went out, fall back to All rather than showing an empty tab.
+  // The filter and search live in the URL so Back from a capsule returns to them. If the
+  // tab's last capsule just went out, fall back to All rather than showing an empty tab.
   const requested = parseSpiritFilter(searchParams.get("spirit"));
   const filter: SpiritFilter = tabs.includes(requested) ? requested : "all";
-  const items = filterBySpirit(base, filter);
+  const query = searchParams.get("q") ?? "";
+  const items = searchShelf(filterBySpirit(base, filter), query);
   const totals = shelfTotals(base);
   const low = isOwner ? lowItems(shelf) : [];
 
-  const setFilter = (next: SpiritFilter) =>
-    setSearchParams(next === "all" ? {} : { spirit: next }, {
-      replace: true,
-      preventScrollReset: true,
-    });
+  const setParam = (key: "spirit" | "q", value: string | null) =>
+    setSearchParams(
+      (prev) => {
+        const next = new URLSearchParams(prev);
+        if (value) next.set(key, value);
+        else next.delete(key);
+        return next;
+      },
+      { replace: true, preventScrollReset: true },
+    );
+  const setFilter = (next: SpiritFilter) => setParam("spirit", next === "all" ? null : next);
 
   const onTaken = (item: ShelfItem) => (result: TakeCapsuleResultType) => {
     const state: CheersState = {
@@ -93,6 +101,16 @@ export default function BarPage() {
         </Link>
       )}
 
+      <input
+        className={ui.input}
+        value={query}
+        onChange={(e) => setParam("q", e.target.value)}
+        placeholder="Search drinks"
+        aria-label="Search drinks"
+        type="search"
+        enterKeyHint="search"
+      />
+
       <SpiritTabs tabs={tabs} value={filter} onChange={setFilter} />
 
       <div className={styles.toolbar}>
@@ -101,7 +119,9 @@ export default function BarPage() {
       </div>
 
       {items.length === 0 ? (
-        <p className={ui.emptyState}>Nothing on the shelf here yet.</p>
+        <p className={ui.emptyState}>
+          {query.trim() ? `No drinks match "${query}".` : "Nothing on the shelf here yet."}
+        </p>
       ) : view === "grid" ? (
         <div className={styles.grid}>
           {items.map((item) => (

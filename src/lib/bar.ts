@@ -83,14 +83,48 @@ export function visibleShelf(
   return shelf.filter((i) => i.status !== "out");
 }
 
+function tabsFor(spirits: SpiritType[]): SpiritFilter[] {
+  const present = new Set(spirits);
+  return SPIRIT_FILTERS.filter((f) => f === "all" || present.has(f));
+}
+
 /** "All" always; a spirit tab only when there's something of that spirit in view. */
 export function spiritTabs(items: ShelfItem[]): SpiritFilter[] {
-  const present = new Set(items.map((i) => i.capsule.spirit));
-  return SPIRIT_FILTERS.filter((f) => f === "all" || present.has(f));
+  return tabsFor(items.map((i) => i.capsule.spirit));
+}
+
+/** The same tabs for Add a capsule, drawn from the whole catalog. */
+export function catalogTabs(capsules: CapsuleDbType[]): SpiritFilter[] {
+  return tabsFor(capsules.map((c) => c.spirit));
 }
 
 export function filterBySpirit(items: ShelfItem[], filter: SpiritFilter): ShelfItem[] {
   return filter === "all" ? items : items.filter((i) => i.capsule.spirit === filter);
+}
+
+/** The search box on Bar and Add a capsule: the name or the spirit contains the query. */
+export function matchesSearch(capsule: CapsuleDbType, query: string): boolean {
+  const q = query.trim().toLowerCase();
+  return (
+    !q ||
+    capsule.name.toLowerCase().includes(q) ||
+    SPIRIT_LABELS[capsule.spirit].toLowerCase().includes(q)
+  );
+}
+
+export function searchShelf(items: ShelfItem[], query: string): ShelfItem[] {
+  return query.trim() ? items.filter((i) => matchesSearch(i.capsule, query)) : items;
+}
+
+/** Add a capsule's list: the catalog A–Z, narrowed by the spirit tab and the search box. */
+export function catalogRows(
+  capsules: CapsuleDbType[],
+  filter: SpiritFilter,
+  query: string,
+): CapsuleDbType[] {
+  return capsules
+    .filter((c) => (filter === "all" || c.spirit === filter) && matchesSearch(c, query))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export function parseSpiritFilter(value: string | null): SpiritFilter {
