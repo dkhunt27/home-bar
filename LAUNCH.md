@@ -66,10 +66,7 @@ Status on 2026-11-13:
 - [x] **Name the bar:** in the SQL editor, run
       [`supabase/snippets/configure-bar.sql`](supabase/snippets/configure-bar.sql) with your name,
       the bar's name and the low-stock threshold. Change the values in the editor, not the file.
-- [ ] **Optional, SMTP for sign-in emails:** Authentication → Emails → SMTP Settings, with
-      Maileroo's SMTP credentials (`smtp.maileroo.com`). Supabase's built-in sender only manages
-      a couple of emails an hour. That's enough for one owner signing in now and then, but it
-      runs out fast if you're testing.
+- [ ] **SMTP for sign-in emails:** moved to phase 9. The sign-in code needs it.
 
 ## 4. First deploy
 
@@ -91,11 +88,8 @@ Status on 2026-11-13:
 - [x] **Service key, recommended even without email:** `npx wrangler secret put SUPABASE_SERVICE_ROLE_KEY`
       (the same `sb_secret_…` key). Without it, the cron can't send alerts or delete stale
       anonymous guests.
-- [ ] **Optional, low-stock and new-guest emails:** in Maileroo, verify a domain you own and
-      create an API key. Then run `npx wrangler secret put MAILEROO_API_KEY` and set
-      `ALERT_FROM_EMAIL` in `wrangler.jsonc` (for example `"Home Bar <bar@yourdomain.com>"`).
-      Without them the app still works fully, and the owner still sees the in-app low-stock
-      banner.
+- [ ] **Optional, low-stock and new-guest emails:** moved to phase 9. Without them the app still
+      works fully, and the owner still sees the in-app low-stock banner.
 - [x] **Redeploy:** `npm run deploy:manual:web`, so the new `vars` go live. Secrets apply as soon
       as you set them, and they survive deploys.
 
@@ -137,3 +131,36 @@ Status on 2026-11-13:
 - [ ] **Low stock:** take one until a capsule hits the threshold. The banner appears, and if
       email is set up, the alert arrives. The cron retries anything missed every 30 minutes.
 - [ ] **Home screen:** on your phone, use Share → Add to Home Screen to install it as an app.
+
+## 9. Email through Maileroo
+
+Everything sends from `Pour Decisions <bar@pour-decisions.hunt27.com>`: the owner's sign-in code
+(Supabase over SMTP) and the low-stock and new-guest alerts (the Worker, over Maileroo's API).
+The hosted project only lets you edit its email templates once it sends through your own SMTP,
+so the sign-in email has no code until this is done.
+
+- [ ] **Add the domain:** in Maileroo, add `pour-decisions.hunt27.com` as a sending domain.
+- [ ] **DNS:** in Cloudflare, open the hunt27.com zone → DNS → Records and add every record
+      Maileroo lists. Cloudflare adds the zone to the end of the name, so a record Maileroo names
+      `<selector>._domainkey.pour-decisions.hunt27.com` is entered as
+      `<selector>._domainkey.pour-decisions`. The Worker's A/AAAA records already sit at
+      `pour-decisions`. TXT records can share that name with them. If Maileroo doesn't list a
+      DMARC record, add a TXT record named `_dmarc.pour-decisions` with the value
+      `v=DMARC1; p=none`. Then click Verify in Maileroo (DNS can take a few minutes to show up).
+- [ ] **SMTP for sign-in codes:** create SMTP credentials for the domain in Maileroo. In
+      Supabase, go to Authentication → Emails → SMTP Settings and turn on custom SMTP: sender
+      email `bar@pour-decisions.hunt27.com`, sender name `Pour Decisions`, host
+      `smtp.maileroo.com`, port `587`, and Maileroo's username and password. Supabase now
+      limits how many emails go out per hour (see Authentication → Rate Limits). That's plenty
+      for one owner.
+- [ ] **Sign-in email template:** Authentication → Emails → Templates → Magic Link. Set the
+      subject to `Your Home Bar sign-in code` and paste in the body from
+      [`supabase/templates/magic-link.html`](supabase/templates/magic-link.html). Its
+      `{{ .Token }}` is the code. A link alone opens in Safari, never the home-screen app.
+- [x] **Sender for alerts (Claude):** `ALERT_FROM_EMAIL` is set in `wrangler.jsonc` and goes live
+      with the next deploy.
+- [ ] **Alerts from the Worker:** create an API key in Maileroo, then run
+      `npx wrangler secret put MAILEROO_API_KEY`.
+- [ ] **Test:** sign out on the live site, then ask for a code on the Owner tab. The email
+      should come from Pour Decisions with an 8-digit code. The Worker's alerts can be tested
+      with the Low stock smoke test in phase 8.

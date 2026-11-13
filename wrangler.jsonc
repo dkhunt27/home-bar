@@ -37,9 +37,9 @@
   "vars": {
     "VITE_SUPABASE_URL": "https://mhsohmkiefatecjgaehk.supabase.co",
     "VITE_SUPABASE_PUBLISHABLE_KEY": "sb_publishable_B4ye1c44Q_WeIOsAuzTQrQ_JXo-ying",
-    // Sender for the low-stock email, e.g. "Home Bar <bar@yourdomain.com>". Must be on a
-    // domain verified in Maileroo. Left blank, the email is off ("not configured").
-    "ALERT_FROM_EMAIL": "",
+    // Sender for the low-stock and new-guest emails. Must be on a domain verified in Maileroo
+    // (LAUNCH.md phase 9). Left blank, the email is off ("not configured").
+    "ALERT_FROM_EMAIL": "Pour Decisions <bar@pour-decisions.hunt27.com>",
     // The deployed site, e.g. https://home-bar.<you>.workers.dev. Only the cron needs it, for
     // the "Restock in the app" link (the notify route uses its own request's origin).
     "APP_URL": "https://pour-decisions.hunt27.com"
