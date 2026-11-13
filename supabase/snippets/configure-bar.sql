@@ -8,8 +8,8 @@
 -- on the Owner tab. The guest link and its QR code are on Manage → Guest link.
 
 UPDATE settings
-SET owner_name = 'Sam',          -- "ask Sam to restock", and you in the activity log
-    bar_name = 'The Home Bar',   -- Bar screen title, sign-in eyebrow, guest link, emails
+SET owner_name = 'Hunt',          -- "ask Sam to restock", and you in the activity log
+    bar_name = 'Pour Decisions',   -- Bar screen title, sign-in eyebrow, guest link, emails
     low_threshold = 2            -- also editable on the Manage screen
 WHERE id = 1;
 
