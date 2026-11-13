@@ -75,9 +75,10 @@ Status on 2026-11-13:
 
 - [x] **Deploy:** `npm run deploy:manual:web`. This builds against the project in `wrangler.jsonc`
       and runs `wrangler deploy`. If your account has no workers.dev subdomain yet, wrangler asks
-      you to pick one. It prints the live URL, which is
-      <https://home-bar.home-bar.workers.dev>. A newly registered subdomain fails TLS
-      handshakes for a few minutes while Cloudflare issues its certificate.
+      you to pick one. It prints the live URL, which was
+      <https://home-bar.home-bar.workers.dev> until phase 7 moved the app to its own domain. A
+      newly registered subdomain fails TLS handshakes for a few minutes while Cloudflare issues
+      its certificate.
 - [x] **Tell Supabase the URL:** Authentication → URL Configuration. Set the Site URL to the live
       URL, and add it under Redirect URLs as well. Until then, magic links send you to the wrong
       place.
@@ -109,7 +110,23 @@ Status on 2026-11-13:
       `main` lints, tests, builds and deploys. Migrations never run from CI: after adding one,
       run `npm run push:prod` by hand.
 
-## 7. Smoke test
+## 7. Custom domain
+
+- [x] **Serve at `pour-decisions.hunt27.com` (Claude).** In `wrangler.jsonc`, add the hostname
+      to `routes` with `custom_domain: true`, set `workers_dev: false` and point `APP_URL` at it,
+      then run `npm run gen:worker-types`. You don't add DNS records: the deploy creates the record
+      and certificate in the hunt27.com zone, which must be in the same Cloudflare account.
+- [x] **First deploy from your machine:** `npm run deploy:manual:web`. Wrangler's login can
+      create the domain, but the GitHub token might not. If a GitHub deploy failed partway, the
+      app could end up offline at both addresses.
+- [x] **Update Supabase:** under Authentication → URL Configuration, set the Site URL to
+      `https://pour-decisions.hunt27.com`, and replace the workers.dev entry in Redirect URLs.
+- [x] **Sign in again** at the new address. Sign-ins don't carry over from the old one.
+- If the name doesn't resolve on a device that looked it up before the record existed, that
+  device has cached the "no such name" answer. On a Mac, clear it with
+  `sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder`.
+
+## 8. Smoke test
 
 - [x] **Owner:** on the live site, open the Owner tab and enter your email. The magic link should
       land you signed in, with the Manage tab showing.
