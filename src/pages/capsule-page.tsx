@@ -25,7 +25,8 @@ export default function CapsulePage() {
   const { capsuleId } = useParams();
   const { isOwner } = useAuth();
   const { found, settings, isPending, error } = useShelfItem(capsuleId);
-  const [photo, setPhoto] = useState<Photo>("box");
+  // The pour shows the drink itself; the box is a tap away.
+  const [photo, setPhoto] = useState<Photo>("pour");
   const [taking, setTaking] = useState(false);
   const [adding, setAdding] = useState(false);
   const adjust = useAdjustStock();
